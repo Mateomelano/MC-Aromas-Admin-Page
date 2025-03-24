@@ -1,0 +1,101 @@
+@use '../base/variables' as v;
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+#productos {	
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+    h1 {    
+        font-size: 3.3rem;
+        font-weight: 500;
+    }    
+    p {
+        color: v.$gris-oscuro;
+        font-size: 1.6rem;
+        font-weight: 400;
+    }
+}
+
+
+h1, h2 {
+    color: v.$primary-color;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+table {
+    width: 150vh;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: v.$primary-color;
+    color: white;
+}
+
+td, th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background: #f1f1f1;
+}
+
+
+// Botones
+.btn {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  
+    &:hover {
+      background-color: #218838;
+    }
+  }
+  
+  .edit-btn, .delete-btn {
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    background: none;
+    margin: 0 5px;
+  }
+  
+  .edit-btn {
+    color: #007bff;
+  }
+  
+  .delete-btn {
+    color: #dc3545;
+  }
+  

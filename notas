@@ -1,1 +1,16 @@
-Pagina administrativa con con tabla y contadores de productos etc.
+Tareas:
+
+
+Conexion a base de datos -x-
+Conexion en servidor -x-
+Estilos -x-
+Funcionalidad de botones -x-
+Validaciones de CRUD --
+Cuadros informativos en index --
+Imagenes Productos --
+Barra Buscadora -- 
+Filtros Para busqueda (Menor Precio - Marca - Categoria) --
+
+CONSIDERACIONES:
+
+Cerrar el proceso en el puerto 3306 antes de inicar MySql en XAMPP
