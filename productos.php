@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importar jQuery -->
     <script src="build/js/app.js"></script>
-    <link rel="stylesheet" href="build/css/app.css" />
+    <link rel="stylesheet" href="build/css/app.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet" />
@@ -28,6 +28,7 @@
         <section id="productos" class="productos-section">
             <h2>Lista de Productos</h2>
             <button id="add-product-btn" class="btn">➕ Agregar Producto</button>
+            <input type="text" id="search-input" placeholder="Buscar...">
             <table>
                 <thead>
                     <tr>
@@ -48,40 +49,74 @@
     </main>
 
     <script>
-        $(document).ready(function() {
-            $.ajax({
-                url: 'src/php/get_productos.php',
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    let tableBody = $('#product-table-body');
-                    tableBody.empty();
+$(document).ready(function () {
+    function cargarProductos(query = '') {
+        $.ajax({
+            url: 'src/php/get_productos.php',
+            type: 'GET',
+            data: { q: query }, // Enviar el parámetro de búsqueda
+            dataType: 'json',
+            success: function (data) {
+                let tableBody = $('#product-table-body');
+                tableBody.empty();
 
-                    if (data.length > 0) {
-                        data.forEach(function(producto) {
-                            let row = `<tr>
-                                <td>${producto.id}</td>
-                                <td>${producto.nombre}</td>
-                                <td>${producto.categoria}</td>
-                                <td>${producto.marca}</td>
-                                <td>$${parseFloat(producto.precio).toFixed(2)}</td>
-                                <td>${producto.habilitado == 1 ? 'Sí' : 'No'}</td>
-                                <td>
-                                    <button class='edit-btn' data-id='${producto.id}'>✏️</button>
-                                    <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
-                                </td>
-                            </tr>`;
-                            tableBody.append(row);
-                        });
-                    } else {
-                        tableBody.append("<tr><td colspan='7'>No hay productos disponibles</td></tr>");
-                    }
-                },
-                error: function() {
-                    $('#product-table-body').append("<tr><td colspan='7'>Error al cargar los productos</td></tr>");
+                if (data.length > 0) {
+                    data.forEach(function (producto) {
+                        
+                        let checked = producto.habilitado == 1 ? 'checked' : '';
+
+                        let row = `<tr>
+                            <td>${producto.id}</td>
+                            <td>${producto.nombre}</td>
+                            <td>${producto.categoria}</td>
+                            <td>${producto.marca}</td>
+                            <td>$${parseFloat(producto.precio).toFixed(2)}</td>
+                            <td>
+                                <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
+                            </td>
+                            <td>
+                                <button class='edit-btn' data-id='${producto.id}'>✏️</button>
+                                <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
+                            </td>
+                        </tr>`;
+                        tableBody.append(row);
+                    });
+                } else {
+                    tableBody.append("<tr><td colspan='7'>No hay productos disponibles</td></tr>");
                 }
-            });
+            },
+            error: function () {
+                $('#product-table-body').append("<tr><td colspan='7'>Error al cargar los productos</td></tr>");
+            }
         });
+    }
+
+    // Cargar productos al inicio
+    cargarProductos();
+
+    // Filtrar productos en tiempo real
+    $('#search-input').on('input', function () {
+        let query = $(this).val();
+        cargarProductos(query);
+    });
+
+    // Delegación de eventos para cambiar el estado del checkbox
+    $(document).on('change', '.toggle-habilitado', function () {
+        let productId = $(this).data('id');
+        let nuevoEstado = $(this).is(':checked') ? 1 : 0;
+
+        $.post('src/php/editar_producto.php', {
+            id: productId,
+            habilitado: nuevoEstado
+        }, function (data) {
+            console.log('Estado actualizado');
+        }).fail(function () {
+            alert('Error al actualizar el estado');
+        });
+    });
+});
+
+
     </script>
 <!-- Modal Agregar Producto -->
 <div id="modalAgregar" class="modal">

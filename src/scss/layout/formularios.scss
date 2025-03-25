@@ -48,3 +48,28 @@
 .modal-content button:hover {
     background: #45a049;
 }
+
+
+//barra de busqueda
+#search-input {
+    width: 80vh;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.3s;
+
+    &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+}
+
+//check
+input[type="checkbox"].toggle-habilitado {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #28a745; // Color verde cuando está activado
+}
