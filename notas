@@ -12,7 +12,7 @@ Barra Buscadora -x-
 Filtros Para busqueda (Menor Precio - Marca - Categoria) -x-
 Agregar Campo Descripcion --
 Filtro por no habilitado --
-
+Crear nueva tabla en BD con solo un string para imagenes del banner --
 CONSIDERACIONES:
 
 Cerrar el proceso en el puerto 3306 antes de inicar MySql en XAMPP
