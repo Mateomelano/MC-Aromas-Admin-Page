@@ -5,14 +5,25 @@ Conexion a base de datos -x-
 Conexion en servidor -x-
 Estilos -x-
 Funcionalidad de botones -x-
+Barra Buscadora -x- 
+Filtros Para busqueda (Menor Precio - Marca - Categoria) -x-
+Filtro no habilitado -x-
+Crear nueva tabla en BD con solo un string para imagenes del banner -x-
+Agregar campo imagen en tabla productos y adaptar para la carga de la misma -x-
+Agregar Campo Descripcion -x-
+
+
+Falta por hacer:
+
+
+Agregar Logo --
 Validaciones de CRUD --
 Cuadros informativos en index --
 Imagenes Productos --
-Barra Buscadora -x- 
-Filtros Para busqueda (Menor Precio - Marca - Categoria) -x-
-Agregar Campo Descripcion --
-Filtro por no habilitado --
-Crear nueva tabla en BD con solo un string para imagenes del banner --
+Acomodar estilos Responsive --  
+
+
+
 CONSIDERACIONES:
 
 Cerrar el proceso en el puerto 3306 antes de inicar MySql en XAMPP
