@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importar jQuery -->
     <script src="src/js/app.js"></script>
-    <link rel="stylesheet" href="build/css/app.css"/>
+    <link rel="stylesheet" href="build/css/app.css?v=<?php echo time(); ?>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet" />
@@ -37,7 +38,9 @@
                         <th>Descripcion</th>
                         <th>Categoría</th>
                         <th>Marca</th>
-                        <th>Precio</th>
+                        <th>Precio 
+                            <span id="ordenar-precio" class="orden-icon" data-order="null">🔼🔽🎲</span>
+                        </th>
                         <th>Habilitado 
                             <input type="checkbox" id="filter-habilitado" data-state="null">
                         </th>

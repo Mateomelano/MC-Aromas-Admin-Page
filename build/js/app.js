@@ -131,4 +131,83 @@ $(document).ready(function () {
   $(".close").click(function () {
     $(this).closest(".modal").css("display", "none");
   });
+
+
+  // filtro precio
+  let ordenPrecio = null; // Estado inicial (sin orden)
+
+$("#ordenar-precio").click(function () {
+    let ordenActual = $(this).data("order");
+
+    if (ordenActual === "null") {
+        ordenPrecio = "asc"; // 🔼 Orden Ascendente
+        $(this).data("order", "asc").text("🔽");
+    } else if (ordenActual === "asc") {
+        ordenPrecio = "desc"; // 🔽 Orden Descendente
+        $(this).data("order", "desc").text("🔼");
+    } else if (ordenActual === "desc") {
+        ordenPrecio = "random"; // 🎲 Orden Aleatorio
+        $(this).data("order", "random").text("🎲");
+    } else {
+        ordenPrecio = null; // Estado inicial (sin orden)
+        $(this).data("order", "null").text("🔼🔽🎲");
+    }
+
+    let query = $("#search-input").val();
+    let habilitado = $("#filter-habilitado").data("state");
+    cargarProductos(query, habilitado, ordenPrecio);
+});
+
+function cargarProductos(query = '', habilitadoFiltro = null, orden = null) {
+    let data = { q: query };
+    if (habilitadoFiltro !== null) {
+        data.habilitado = habilitadoFiltro;
+    }
+    if (orden) {
+        data.orden = orden; // Agregar parámetro de orden
+    }
+
+    $.ajax({
+        url: 'src/php/get_productos.php',
+        type: 'GET',
+        data: data,
+        dataType: 'json',
+        success: function (data) {
+            let tableBody = $('#product-table-body');
+            tableBody.empty();
+
+            if (data.length > 0) {
+                data.forEach(function (producto) {
+                    let checked = producto.habilitado == 1 ? 'checked' : '';
+                    let row = `<tr>
+                                <td>${producto.id}</td>
+                                <td>${producto.nombre}</td>
+                                <td>${producto.descripcion}</td>
+                                <td>${producto.categoria}</td>
+                                <td>${producto.marca}</td>
+                                <td>$${parseFloat(producto.precio).toFixed(2)}</td>
+                                <td>
+                                    <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
+                                </td>
+                                <td>
+                                    <img src="${producto.imagen}" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
+                                </td>
+                                <td>
+                                    <button class='edit-btn' data-id='${producto.id}'>✏️</button>
+                                    <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
+                                </td>
+                            </tr>`;
+
+                    tableBody.append(row);
+                });
+            } else {
+                tableBody.append("<tr><td colspan='9'>No hay productos disponibles</td></tr>");
+            }
+        },
+        error: function () {
+            $('#product-table-body').append("<tr><td colspan='9'>Error al cargar los productos</td></tr>");
+        }
+    });
+}
+
 });

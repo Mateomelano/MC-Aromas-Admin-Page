@@ -99,3 +99,17 @@ tbody tr:hover {
     color: #dc3545;
   }
   
+  // iconos
+
+.orden-icon {
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.orden-icon:hover {
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+
+    transform: scale(1.2);
+    color: #007bff; /* Azul, puedes cambiarlo */
+}
