@@ -12,15 +12,17 @@ Crear nueva tabla en BD con solo un string para imagenes del banner -x-
 Agregar campo imagen en tabla productos y adaptar para la carga de la misma -x-
 Agregar Campo Descripcion -x-
 Filtro por precio -x-
+Acomodar filtro por precio -x-
+Agregar Logo -x-
+Cuadros informativos en index -x-
+Acomodar estilos Responsive -x- 
+Exportar a excel -x-
 
 Falta por hacer:
 
-
-Agregar Logo --
-Validaciones de CRUD --
-Cuadros informativos en index --
-Imagenes Productos --
-Acomodar estilos Responsive --  
+Arreglar Bug en filtro precio --
+Validaciones de CRUD (marcas) --
+Imagenes Productos (cloudify) -- 
 
 
 

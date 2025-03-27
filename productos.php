@@ -7,9 +7,13 @@
     <title>MC Aromas - Productos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importar jQuery -->
-    <script src="src/js/app.js"></script>
+    <!-- Estilos -->
     <link rel="stylesheet" href="build/css/app.css?v=<?php echo time(); ?>">
-
+    <!-- JS -->
+    <script src="build/js/app.js?v=<?php echo time(); ?>"></script>
+    <!-- Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Fuente Lexend -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet" />
@@ -18,6 +22,7 @@
     
     <aside class="sidebar">
         <nav>
+            <img src="src/img/MERCERIAAA-02.jpg" class="logo"  alt="">
             <ul>
                 <li><a href="index.php">Información</a></li>
                 <li><a href="productos.php">Productos</a></li>
@@ -28,8 +33,12 @@
     <main class="content">
         <section id="productos" class="productos-section">
             <h2>Lista de Productos</h2>
-            <button id="add-product-btn" class="btn">➕ Agregar Producto</button>
-            <input type="text" id="search-input" placeholder="Buscar...">
+            <div class = "filter-container">
+                <button id="add-product-btn" class="btn">➕ Agregar Producto</button>
+                <input type="text" id="search-input" placeholder="Buscar...🔍">
+                <button id="export-excel-btn" class="btn-excel">📊 Exportar Excel</button>
+
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -39,10 +48,13 @@
                         <th>Categoría</th>
                         <th>Marca</th>
                         <th>Precio 
-                            <span id="ordenar-precio" class="orden-icon" data-order="null">🔼🔽🎲</span>
+                            <span id="ordenar-precio" class="orden-icon" data-order="null">🔼🔽</span>
                         </th>
                         <th>Habilitado 
-                            <input type="checkbox" id="filter-habilitado" data-state="null">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="filter-habilitado">
+                            </label>
+
                         </th>
                         <th>Imagen</th>
                         <th>Acciones</th>
@@ -55,104 +67,6 @@
         </section>
     </main>
 
-    <script>
-        $(document).ready(function () {
-            function cargarProductos(query = '', habilitadoFiltro = null) {
-                let data = { q: query };
-                if (habilitadoFiltro !== null) {
-                    data.habilitado = habilitadoFiltro;
-                }
-
-                $.ajax({
-                    url: 'src/php/get_productos.php',
-                    type: 'GET',
-                    data: data,
-                    dataType: 'json',
-                    success: function (data) {
-                        let tableBody = $('#product-table-body');
-                        tableBody.empty();
-
-                        if (data.length > 0) {
-                            data.forEach(function (producto) {
-                                let checked = producto.habilitado == 1 ? 'checked' : '';
-                                let row = `<tr>
-                                            <td>${producto.id}</td>
-                                            <td>${producto.nombre}</td>
-                                            <td>${producto.descripcion}</td>
-                                            <td>${producto.categoria}</td>
-                                            <td>${producto.marca}</td>
-                                            <td>$${parseFloat(producto.precio).toFixed(2)}</td>
-                                            <td>
-                                                <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
-                                            </td>
-                                            <td>
-                                                <img src="${producto.imagen}" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
-                                            </td>
-                                            <td>
-                                                <button class='edit-btn' data-id='${producto.id}'>✏️</button>
-                                                <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
-                                            </td>
-                                        </tr>`;
-
-                                tableBody.append(row);
-                            });
-                        } else {
-                            tableBody.append("<tr><td colspan='7'>No hay productos disponibles</td></tr>");
-                        }
-                    },
-                    error: function () {
-                        $('#product-table-body').append("<tr><td colspan='7'>Error al cargar los productos</td></tr>");
-                    }
-                });
-            }
-
-            // 🟢 Estado inicial: intermedio (todos los productos)
-            let filtroHabilitado = null;
-            let filtroCheckbox = $('#filter-habilitado');
-            filtroCheckbox.data('state', filtroHabilitado);
-            filtroCheckbox.prop('indeterminate', true);
-
-            // Cargar todos los productos al inicio
-            cargarProductos();
-
-            // Filtrar productos en tiempo real (input de búsqueda)
-            $('#search-input').on('input', function () {
-                let query = $(this).val();
-                cargarProductos(query, filtroCheckbox.data('state'));
-            });
-
-            // 🛠️ Control del ciclo de estados del checkbox
-            filtroCheckbox.on('click', function () {
-                let currentState = $(this).data('state');
-
-                if (currentState === null) {
-                    $(this).data('state', 1).prop('checked', true).prop('indeterminate', false); // Solo habilitados
-                } else if (currentState === 1) {
-                    $(this).data('state', 0).prop('checked', false).prop('indeterminate', false); // Solo no habilitados
-                } else {
-                    $(this).data('state', null).prop('checked', false).prop('indeterminate', true); // Todos (estado inicial)
-                }
-
-                let query = $('#search-input').val();
-                cargarProductos(query, $(this).data('state'));
-            });
-
-            // Delegación de eventos para cambiar el estado del checkbox individualmente
-            $(document).on('change', '.toggle-habilitado', function () {
-                let productId = $(this).data('id');
-                let nuevoEstado = $(this).is(':checked') ? 1 : 0;
-
-                $.post('src/php/editar_producto.php', {
-                    id: productId,
-                    habilitado: nuevoEstado
-                }, function (data) {
-                    console.log('Estado actualizado');
-                }).fail(function () {
-                    alert('Error al actualizar el estado');
-                });
-            });
-        });
-    </script>
 <!-- Modal Agregar Producto -->
 <div id="modalAgregar" class="modal">
     <div class="modal-content">
@@ -175,7 +89,7 @@
             <input type="number" id="precioAgregar" name="precio" required>
 
             <label>Imagen:</label>
-            <input type="file" id="imagenAgregar" name="imagen" accept="image/*" required>
+            <input type="file" id="imagenAgregar" name="imagen" accept="image/*">
 
             <label>Habilitado:</label>
             <select id="habilitadoAgregar" name="habilitado">
