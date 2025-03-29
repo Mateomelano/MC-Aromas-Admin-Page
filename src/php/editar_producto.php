@@ -9,40 +9,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Si solo se está actualizando el estado "habilitado"
-    if (isset($_POST['habilitado']) && !isset($_POST['nombre'])) {
-        $habilitado = isset($_POST['habilitado']) ? $conn->real_escape_string($_POST['habilitado']) : '0';
-        $sql = "UPDATE productos SET habilitado='$habilitado' WHERE id='$id'";
-    } 
-    // Si se están editando todos los campos
-    else if (isset($_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['marca'], $_POST['precio'], $_POST['habilitado'])) {
-        $nombre = $conn->real_escape_string($_POST['nombre']);
-        $descripcion = $conn->real_escape_string($_POST['descripcion']);
-        $categoria = $conn->real_escape_string($_POST['categoria']);
-        $marca = $conn->real_escape_string($_POST['marca']);
-        $precio = $conn->real_escape_string($_POST['precio']);
-        $habilitado = isset($_POST['habilitado']) ? $conn->real_escape_string($_POST['habilitado']) : '0';
+    $nombre = $conn->real_escape_string($_POST['nombre']);
+    $descripcion = $conn->real_escape_string($_POST['descripcion']);
+    $categoria = $conn->real_escape_string($_POST['categoria']);
+    $marca = $conn->real_escape_string($_POST['marca']);
+    $precio = $conn->real_escape_string($_POST['precio']);
+    $habilitado = isset($_POST['habilitado']) ? $conn->real_escape_string($_POST['habilitado']) : '0';
+    $imagenUrl = isset($_POST['imagenUrlActual']) ? $conn->real_escape_string($_POST['imagenUrlActual']) : null;
 
-        // Manejo de la imagen (solo si se sube una nueva)
-        if (!empty($_FILES['imagen']['name'])) {
-            $imagen = $_FILES['imagen']['name'];
-            $ruta_imagen = "uploads/" . basename($imagen);
-            move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_imagen);
-            $sql = "UPDATE productos 
-                    SET nombre='$nombre', descripcion='$descripcion', categoria='$categoria', 
-                        marca='$marca', precio='$precio', habilitado='$habilitado', imagen='$ruta_imagen'
-                    WHERE id='$id'";
-        } else {
-            // No se subió nueva imagen, mantener la actual
-            $sql = "UPDATE productos 
-                    SET nombre='$nombre', descripcion='$descripcion', categoria='$categoria', 
-                        marca='$marca', precio='$precio', habilitado='$habilitado'
-                    WHERE id='$id'";
-        }
+    // Si se subió una nueva imagen, se actualiza la URL, sino se mantiene la anterior
+    if (isset($_POST['imagenUrl'])) {
+        $imagenUrl = $_POST['imagenUrl'];
+    } elseif (isset($_POST['imagenUrlActual'])) {
+        $imagenUrl = $_POST['imagenUrlActual'];
     } else {
-        echo json_encode(["success" => false, "error" => "Datos insuficientes"]);
-        exit;
+        $imagenUrl = null; // O dejar la URL anterior intacta
     }
+
+    $sql = "UPDATE productos 
+            SET nombre='$nombre', descripcion='$descripcion', categoria='$categoria', 
+                marca='$marca', precio='$precio', habilitado='$habilitado', imagen='$imagenUrl'
+            WHERE id='$id'";
 
     if ($conn->query($sql) === TRUE) {
         echo json_encode(["success" => true, "message" => "Producto actualizado"]);

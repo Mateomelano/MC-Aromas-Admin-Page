@@ -22,7 +22,7 @@
     
     <aside class="sidebar">
         <nav>
-            <img src="src/img/MERCERIAAA-02.jpg" class="logo"  alt="">
+            <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo"  alt="">
             <ul>
                 <li><a href="index.php">Información</a></li>
                 <li><a href="productos.php">Productos</a></li>
@@ -83,7 +83,11 @@
             <input type="text" id="categoriaAgregar" name="categoria" required>
 
             <label>Marca:</label>
-            <input type="text" id="marcaAgregar" name="marca" required>
+            <select id="marcaAgregar" name="marcaSelect">
+                <option value="" disabled selected>Seleccionar marca existente</option>
+                <!-- Aquí se van a cargar las marcas desde la base de datos -->
+            </select>
+            <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca (Opcional)">
 
             <label>Precio:</label>
             <input type="number" id="precioAgregar" name="precio" required>
@@ -103,6 +107,7 @@
 </div>
 
 <!-- Modal Editar Producto -->
+
 <div id="modalEditar" class="modal">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
@@ -115,17 +120,29 @@
 
             <label>Descripción:</label>
             <input type="text" id="descripcionEditar" name="descripcion" required>
-            
+
             <label>Categoría:</label>
             <input type="text" id="categoriaEditar" name="categoria" required>
 
             <label>Marca:</label>
-            <input type="text" id="marcaEditar" name="marca" required>
+            <select id="marcaEditar" name="marca" required>
+                <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
+            </select>
+            <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca (Opcional)">
+            <br>
 
             <label>Precio:</label>
             <input type="number" id="precioEditar" name="precio" required>
 
-            <label>Imagen:</label>
+            <label>Imagen Actual:</label>
+            <div>
+                <img id="imagenActual" src="" alt="Imagen Actual" style="width: 150px;">
+            </div>
+
+            <!-- Input oculto para la URL actual -->
+            <input type="hidden" id="imagenUrlActual" name="imagenUrlActual">
+
+            <label>Subir Nueva Imagen (Opcional):</label>
             <input type="file" id="imagenEditar" name="imagen" accept="image/*">
 
             <label>Habilitado:</label>

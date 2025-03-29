@@ -22,15 +22,56 @@ $(document).ready(function () {
       }
     });
   });
+
+  // Función para cargar marcas desde el servidor y llenar los selects
+function cargarMarcas() {
+  $.ajax({
+    url: "src/php/get_marcas.php",
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      let options = data.map(marca => `<option value="${marca}">${marca}</option>`).join("");
+      $("#marcaAgregar").append(options);
+      $("#marcaEditar").append(options);
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al cargar marcas: ", error);
+    }
+  });
+}
+
+cargarMarcas();
+
   // Agregar Producto
-  $("#formAgregar").submit(function (e) {
+  const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dzfzqzdcu/upload";
+  const cloudinaryPreset = "McaromasPics"; // Reemplaza con tu preset de Cloudinary
+
+  $("#formAgregar").submit(async function (e) {
     e.preventDefault();
-    debugger;
-
     let form = document.getElementById("formAgregar");
-    let formData = new FormData(form); // ✅ Captura todos los datos automáticamente
+    let formData = new FormData(form);
 
-    console.log("📤 Datos del formulario:", formData);
+    // Obtener el valor del select y del input
+    let marcaSeleccionada = $("#marcaAgregar").val();
+    let nuevaMarca = $("#nuevaMarcaAgregar").val().trim();
+
+    if (nuevaMarca) {  // Si el usuario escribe una marca nueva
+        formData.append("marca", nuevaMarca);
+    } else if (marcaSeleccionada) {  // Si selecciona una marca existente
+        formData.append("marca", marcaSeleccionada);
+    } else {  // Si no se elige ni se escribe nada
+        alert("Por favor, selecciona o ingresa una marca.");
+        return;
+    }
+
+    let imagen = document.getElementById("imagenAgregar").files[0];
+
+    if (imagen) {
+      let imageUrl = await subirImagenACloudinary(imagen);
+      if (imageUrl) {
+        formData.append("imagenUrl", imageUrl);
+      }
+    }
 
     $.ajax({
       url: "src/php/agregar_producto.php",
@@ -40,7 +81,7 @@ $(document).ready(function () {
       contentType: false,
     })
       .done(function (data) {
-        console.log("✅ Respuesta del servidor:", data);
+        console.log("✅ Producto agregado:", data);
         alert("Producto agregado correctamente");
         location.reload();
       })
@@ -50,13 +91,32 @@ $(document).ready(function () {
           textStatus,
           errorThrown
         );
-        console.error("📜 Respuesta del servidor:", jqXHR.responseText);
-        alert("Error al agregar producto: " + textStatus);
+        alert("Error al agregar producto");
       });
   });
 
+  //Codigo de subida de imagen
+  async function subirImagenACloudinary(imagen) {
+    let data = new FormData();
+    data.append("file", imagen);
+    data.append("upload_preset", cloudinaryPreset);
+
+    try {
+      let response = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: data,
+      });
+      let result = await response.json();
+      return result.secure_url; // ✅ Devuelve la URL de la imagen subida
+    } catch (error) {
+      console.error("❌ Error al subir imagen a Cloudinary:", error);
+      return null;
+    }
+  }
+
   // Abrir modal de edición con datos del producto
   $(document).on("click", ".edit-btn", function () {
+    debugger;
     let row = $(this).closest("tr");
 
     console.log("Fila seleccionada:", row.html()); // Ver qué HTML tiene la fila seleccionada
@@ -65,43 +125,73 @@ $(document).ready(function () {
     $("#nombreEditar").val(row.find("td:eq(1)").text().trim()); // Nombre
 
     let descripcion = row.find("td:eq(2)").text().trim();
-    console.log("Descripción extraída:", descripcion); // Verificar si viene vacía
     $("#descripcionEditar").val(descripcion);
 
     let categoria = row.find("td:eq(3)").text().trim();
-    console.log("Categoría extraída:", categoria);
     $("#categoriaEditar").val(categoria);
 
     let marca = row.find("td:eq(4)").text().trim();
-    console.log("Marca extraída:", marca);
     $("#marcaEditar").val(marca);
 
     let precio = row.find("td:eq(5)").text().replace("$", "").trim();
-    console.log("Precio extraído:", precio);
     $("#precioEditar").val(precio);
 
     let habilitado = row.find("td:eq(6) input[type='checkbox']").is(":checked")
       ? "1"
       : "0";
-    console.log("Habilitado extraído:", habilitado);
     $("#habilitadoEditar").val(habilitado);
+
+    // 📌 NUEVO: Obtener la URL de la imagen actual desde un atributo data o columna oculta
+    let imagenUrl = row.find("td:eq(7) img").attr("src"); // CORRECTO
+
+    // Mostrar la imagen actual en el modal si existe
+    if (imagenUrl) {
+      $("#imagenActual").attr("src", imagenUrl).show();
+      $("#imagenUrlActual").val(imagenUrl); // Asignar la URL al input oculto
+    } else {
+      $("#imagenActual").hide();
+      $("#imagenUrlActual").val("");
+    }
 
     abrirModal("modalEditar");
   });
 
   // Editar producto
-  $("#formEditar").submit(function (e) {
+  $("#formEditar").submit(async function (e) {
+    debugger;
     e.preventDefault();
     let formData = new FormData();
+
     formData.append("id", $("#idEditar").val());
     formData.append("nombre", $("#nombreEditar").val());
     formData.append("descripcion", $("#descripcionEditar").val());
     formData.append("categoria", $("#categoriaEditar").val());
-    formData.append("marca", $("#marcaEditar").val());
     formData.append("precio", $("#precioEditar").val());
     formData.append("habilitado", $("#habilitadoEditar").val());
-    if ($("#imagenEditar")[0].files.length > 0) {
-      formData.append("imagen", $("#imagenEditar")[0].files[0]);
+
+    let marcaSeleccionada = $("#marcaEditar").val();
+    let nuevaMarca = $("#nuevaMarcaEditar").val().trim();
+
+    if (nuevaMarca) {
+        formData.set("marca", nuevaMarca);
+    } else if (marcaSeleccionada) {
+        formData.set("marca", marcaSeleccionada);
+    }
+
+    // Obtener la URL de la imagen actual
+    let imagenActual = $("#imagenUrlActual").val();
+    formData.append("imagenUrlActual", imagenActual);
+
+    let imagen = document.getElementById("imagenEditar").files[0];
+
+    if (imagen) {
+      // Si se sube una nueva imagen
+      let imageUrl = await subirImagenACloudinary(imagen);
+      if (imageUrl) {
+        formData.set("imagenUrl", imageUrl); // Reemplazar con la nueva URL
+      }
+    } else {
+      formData.append("imagenUrl", imagenActual); // Mantener la URL anterior si no se sube nada nuevo
     }
 
     $.ajax({
@@ -110,9 +200,18 @@ $(document).ready(function () {
       data: formData,
       processData: false,
       contentType: false,
-    }).done(function (data) {
-      location.reload();
-    });
+    })
+      .done(function (data) {
+        location.reload();
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        console.error(
+          "❌ Error en la solicitud AJAX:",
+          textStatus,
+          errorThrown
+        );
+        alert("Error al editar producto");
+      });
   });
 
   // Abrir modal de confirmación de eliminación
@@ -138,11 +237,10 @@ $(document).ready(function () {
   // filtro precio
   let ordenPrecio = null; // Estado inicial (sin orden)
   // ✅ Actualiza el estado de ordenPrecio antes de la llamada AJAX
-    ordenPrecio = $(this).data("order");
+  ordenPrecio = $(this).data("order");
   $("#ordenar-precio").click(function () {
-    debugger
     let ordenActual = $(this).data("order");
-  
+
     if (ordenActual === "null") {
       ordenPrecio = "asc"; // 🔼 Orden Ascendente
       $(this).data("order", "asc").text("🔽");
@@ -153,16 +251,15 @@ $(document).ready(function () {
       ordenPrecio = null; // Sin orden, se muestran todos los productos sin filtrar
       $(this).data("order", "null").text("🔼🔽");
     }
-  
+
     // ✅ Actualiza el estado de ordenPrecio antes de la llamada AJAX
     ordenPrecio = $(this).data("order");
-  
+
     let query = $("#search-input").val();
     let habilitado = $("#filter-habilitado").data("state");
-  
+
     cargarProductos(query, habilitado, ordenPrecio);
   });
-  
 
   function cargarProductos(query = "", habilitadoFiltro = null, orden = null) {
     let data = { q: query };
@@ -291,61 +388,58 @@ $(document).ready(function () {
 
   //Funcion Exportar Excel
 
-    // Evento al hacer clic en el botón Excel
-    $("#export-excel-btn").on("click", function () {
-      exportToExcel();
-    });
-
-    function exportToExcel() {
-      debugger;
-      let table = $("#product-table-body");
-      let rows = table.find("tr");
-      let data = [];
-
-      // Agregar encabezados (sin imagen)
-      let headers = [
-        "ID",
-        "Nombre",
-        "Descripción",
-        "Categoría",
-        "Marca",
-        "Precio",
-        "Habilitado",
-      ];
-      data.push(headers);
-
-      // Recorrer las filas de la tabla
-      rows.each(function () {
-        let cells = $(this).find("td");
-        if (cells.length > 0) {
-          let habilitadoIcon = cells
-            .eq(6)
-            .find("input[type='checkbox']")
-            .is(":checked")
-            ? "✅ Sí"
-            : "❌ No";
-
-          let rowData = [
-            cells.eq(0).text().trim(), // ID
-            cells.eq(1).text().trim(), // Nombre
-            cells.eq(2).text().trim(), // Descripción
-            cells.eq(3).text().trim(), // Categoría
-            cells.eq(4).text().trim(), // Marca
-            cells.eq(5).text().trim(), // Precio
-            habilitadoIcon, // Habilitado con ícono de texto
-          ];
-          data.push(rowData);
-        }
-      });
-
-      // Crear la hoja de Excel
-      let ws = XLSX.utils.aoa_to_sheet(data);
-      let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Productos");
-
-      // Descargar el archivo
-      XLSX.writeFile(wb, "productos.xlsx");
-    }
+  // Evento al hacer clic en el botón Excel
+  $("#export-excel-btn").on("click", function () {
+    exportToExcel();
   });
 
+  function exportToExcel() {
+    let table = $("#product-table-body");
+    let rows = table.find("tr");
+    let data = [];
 
+    // Agregar encabezados (sin imagen)
+    let headers = [
+      "ID",
+      "Nombre",
+      "Descripción",
+      "Categoría",
+      "Marca",
+      "Precio",
+      "Habilitado",
+    ];
+    data.push(headers);
+
+    // Recorrer las filas de la tabla
+    rows.each(function () {
+      let cells = $(this).find("td");
+      if (cells.length > 0) {
+        let habilitadoIcon = cells
+          .eq(6)
+          .find("input[type='checkbox']")
+          .is(":checked")
+          ? "✅ Sí"
+          : "❌ No";
+
+        let rowData = [
+          cells.eq(0).text().trim(), // ID
+          cells.eq(1).text().trim(), // Nombre
+          cells.eq(2).text().trim(), // Descripción
+          cells.eq(3).text().trim(), // Categoría
+          cells.eq(4).text().trim(), // Marca
+          cells.eq(5).text().trim(), // Precio
+          habilitadoIcon, // Habilitado con ícono de texto
+        ];
+        data.push(rowData);
+      }
+    });
+
+    // Crear la hoja de Excel
+    let ws = XLSX.utils.aoa_to_sheet(data);
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Productos");
+
+    // Descargar el archivo
+    XLSX.writeFile(wb, "productos.xlsx");
+  }
+});

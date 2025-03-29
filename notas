@@ -1,6 +1,5 @@
 Tareas:
 
-
 Conexion a base de datos -x-
 Conexion en servidor -x-
 Estilos -x-
@@ -17,14 +16,14 @@ Agregar Logo -x-
 Cuadros informativos en index -x-
 Acomodar estilos Responsive -x- 
 Exportar a excel -x-
+Imagenes Productos (cloudify) -x-
 
 Falta por hacer:
 
 Arreglar Bug en filtro precio --
-Validaciones de CRUD (marcas) --
-Imagenes Productos (cloudify) -- 
-
-
+Validaciones de CRUD (marcas) -- 
+Crear seccion de Banner
+Informacion de Marcas Index
 
 CONSIDERACIONES:
 

@@ -23,7 +23,7 @@
     <aside class="sidebar">
 
       <nav>
-      <img src="src/img/MERCERIAAA-02.jpg" class="logo"  alt="">
+      <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo"  alt="">
         <ul>
           <li><a href="index.php">Información</a></li>
           <li><a href="productos.php">Productos</a></li>
