@@ -17,13 +17,13 @@ Cuadros informativos en index -x-
 Acomodar estilos Responsive -x- 
 Exportar a excel -x-
 Imagenes Productos (cloudify) -x-
+Validaciones de CRUD (marcas) -x- 
+Crear seccion de Banner -x-
 
 Falta por hacer:
 
 Arreglar Bug en filtro precio --
-Validaciones de CRUD (marcas) -- 
-Crear seccion de Banner
-Informacion de Marcas Index
+
 
 CONSIDERACIONES:
 
