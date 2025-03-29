@@ -25,7 +25,7 @@
         </ul>
       </nav>
     </aside>
-        <main class="content">
+        <main class="content-banner">
         <h2>Gestión de Banners</h2>
         <label for="uploadBanner" id="uploadLabel">Agregar Imagen</label>
         <input type="file" id="uploadBanner" accept="image/*">
