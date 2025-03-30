@@ -24,23 +24,25 @@ $(document).ready(function () {
   });
 
   // Función para cargar marcas desde el servidor y llenar los selects
-function cargarMarcas() {
-  $.ajax({
-    url: "src/php/get_marcas.php",
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      let options = data.map(marca => `<option value="${marca}">${marca}</option>`).join("");
-      $("#marcaAgregar").append(options);
-      $("#marcaEditar").append(options);
-    },
-    error: function (xhr, status, error) {
-      console.error("Error al cargar marcas: ", error);
-    }
-  });
-}
+  function cargarMarcas() {
+    $.ajax({
+      url: "src/php/get_marcas.php",
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        let options = data
+          .map((marca) => `<option value="${marca}">${marca}</option>`)
+          .join("");
+        $("#marcaAgregar").append(options);
+        $("#marcaEditar").append(options);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al cargar marcas: ", error);
+      },
+    });
+  }
 
-cargarMarcas();
+  cargarMarcas();
 
   // Agregar Producto
   const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dzfzqzdcu/upload";
@@ -55,13 +57,16 @@ cargarMarcas();
     let marcaSeleccionada = $("#marcaAgregar").val();
     let nuevaMarca = $("#nuevaMarcaAgregar").val().trim();
 
-    if (nuevaMarca) {  // Si el usuario escribe una marca nueva
-        formData.append("marca", nuevaMarca);
-    } else if (marcaSeleccionada) {  // Si selecciona una marca existente
-        formData.append("marca", marcaSeleccionada);
-    } else {  // Si no se elige ni se escribe nada
-        alert("Por favor, selecciona o ingresa una marca.");
-        return;
+    if (nuevaMarca) {
+      // Si el usuario escribe una marca nueva
+      formData.append("marca", nuevaMarca);
+    } else if (marcaSeleccionada) {
+      // Si selecciona una marca existente
+      formData.append("marca", marcaSeleccionada);
+    } else {
+      // Si no se elige ni se escribe nada
+      alert("Por favor, selecciona o ingresa una marca.");
+      return;
     }
 
     let imagen = document.getElementById("imagenAgregar").files[0];
@@ -173,9 +178,9 @@ cargarMarcas();
     let nuevaMarca = $("#nuevaMarcaEditar").val().trim();
 
     if (nuevaMarca) {
-        formData.set("marca", nuevaMarca);
+      formData.set("marca", nuevaMarca);
     } else if (marcaSeleccionada) {
-        formData.set("marca", marcaSeleccionada);
+      formData.set("marca", marcaSeleccionada);
     }
 
     // Obtener la URL de la imagen actual
@@ -239,6 +244,7 @@ cargarMarcas();
   // ✅ Actualiza el estado de ordenPrecio antes de la llamada AJAX
   ordenPrecio = $(this).data("order");
   $("#ordenar-precio").click(function () {
+    debugger;
     let ordenActual = $(this).data("order");
 
     if (ordenActual === "null") {
@@ -262,72 +268,60 @@ cargarMarcas();
   });
 
   function cargarProductos(query = "", habilitadoFiltro = null, orden = null) {
+    debugger;
     let data = { q: query };
     if (habilitadoFiltro !== null) {
-      data.habilitado = habilitadoFiltro;
+        data.habilitado = habilitadoFiltro; // 🔥 Asegúrate de pasar este filtro en la solicitud
     }
     if (orden) {
-      data.orden = orden;
+        data.orden = orden;
     }
 
     $.ajax({
-      url: "src/php/get_productos.php",
-      type: "GET",
-      data: data,
-      dataType: "json",
-      success: function (data) {
-        let tableBody = $("#product-table-body");
-        tableBody.empty();
+        url: "src/php/get_productos.php",
+        type: "GET",
+        data: data,
+        dataType: "json",
+        success: function (data) {
+            let tableBody = $("#product-table-body");
+            tableBody.empty();
 
-        if (data.length > 0) {
-          data.forEach(function (producto) {
-            let checked = producto.habilitado == 1 ? "checked" : "";
-            let row = `<tr>
+            if (data.length > 0) {
+                data.forEach(function (producto) {
+                    let checked = producto.habilitado == 1 ? "checked" : "";
+                    let row = `<tr>
                                 <td>${producto.id}</td>
                                 <td>${producto.nombre}</td>
                                 <td>${producto.descripcion}</td>
                                 <td>${producto.categoria}</td>
                                 <td>${producto.marca}</td>
-                                <td>$${parseFloat(producto.precio).toFixed(
-                                  2
-                                )}</td>
+                                <td>$${parseFloat(producto.precio).toFixed(2)}</td>
                                 <td>
-                                    <input type="checkbox" class="toggle-habilitado" data-id="${
-                                      producto.id
-                                    }" ${checked}>
+                                    <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
                                 </td>
                                 <td>
-                                    <img src="${
-                                      producto.imagen
-                                    }" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
+                                    <img src="${producto.imagen}" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
                                 </td>
                                 <td>
-                                    <button class='edit-btn' data-id='${
-                                      producto.id
-                                    }'>✏️</button>
-                                    <button class='delete-btn' data-id='${
-                                      producto.id
-                                    }'>🗑️</button>
+                                    <button class='edit-btn' data-id='${producto.id}'>✏️</button>
+                                    <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
                                 </td>
                             </tr>`;
-
-            tableBody.append(row);
-          });
-        } else {
-          tableBody.append(
-            "<tr><td colspan='9'>No hay productos disponibles</td></tr>"
-          );
+                    tableBody.append(row);
+                });
+            } else {
+                tableBody.append("<tr><td colspan='9'>No hay productos disponibles</td></tr>");
+            }
+        },
+        error: function () {
+            $("#product-table-body").append("<tr><td colspan='9'>Error al cargar los productos</td></tr>");
         }
-      },
-      error: function () {
-        $("#product-table-body").append(
-          "<tr><td colspan='9'>Error al cargar los productos</td></tr>"
-        );
-      },
     });
-  }
+}
+
 
   // 🟢 Estado inicial: intermedio (todos los productos)
+  debugger;
   let filtroHabilitado = null;
   let filtroCheckbox = $("#filter-habilitado");
   filtroCheckbox.data("state", filtroHabilitado);
@@ -343,49 +337,51 @@ cargarMarcas();
   });
 
   // 🛠️ Control del ciclo de estados del checkbox de filtro
-  filtroCheckbox.on("click", function () {
+  $("#filter-habilitado").on("click", function () {
     let currentState = $(this).data("state");
 
-    if (currentState === null) {
+    if (currentState === null || currentState === undefined) {
       $(this)
         .data("state", 1)
         .prop("checked", true)
-        .prop("indeterminate", false); // Solo habilitados
+        .prop("indeterminate", false); // Mostrar solo habilitados
     } else if (currentState === 1) {
       $(this)
         .data("state", 0)
         .prop("checked", false)
-        .prop("indeterminate", false); // Solo no habilitados
+        .prop("indeterminate", false); // Mostrar solo no habilitados
     } else {
       $(this)
         .data("state", null)
         .prop("checked", false)
-        .prop("indeterminate", true); // Todos (estado inicial)
+        .prop("indeterminate", true); // Mostrar todos
     }
 
     let query = $("#search-input").val();
-    cargarProductos(query, $(this).data("state"));
+    let filtroEstado = $(this).data("state");
+    cargarProductos(query, filtroEstado);
   });
 
   // ✅ Delegación de eventos para cambiar el estado del checkbox individualmente
   $(document).on("change", ".toggle-habilitado", function () {
+    debugger;
     let productId = $(this).data("id");
     let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
     $.post(
       "src/php/editar_producto.php",
-      {
-        id: productId,
-        habilitado: nuevoEstado,
-      },
+      { id: productId, habilitado: nuevoEstado },
       function () {
         console.log("Estado actualizado");
+        // 🔄 Recargar productos para sincronizar la tabla
+        let query = $("#search-input").val();
+        let filtroEstado = $("#filter-habilitado").data("state");
+        cargarProductos(query, filtroEstado);
       }
     ).fail(function () {
       alert("Error al actualizar el estado");
     });
   });
-
   //Funcion Exportar Excel
 
   // Evento al hacer clic en el botón Excel

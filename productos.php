@@ -53,9 +53,9 @@
                         </th>
                         <th>Habilitado 
                             <label class="checkbox-container">
-                                <input type="checkbox" id="filter-habilitado">
+                                <input type="checkbox" id="filter-habilitado" data-state="null"> <!-- Asegúrate de agregar data-state -->
                             </label>
-
+                        </th>
                         </th>
                         <th>Imagen</th>
                         <th>Acciones</th>
