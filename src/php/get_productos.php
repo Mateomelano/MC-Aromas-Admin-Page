@@ -1,6 +1,7 @@
 <?php
 include 'db.php'; // Conexión a la base de datos
 
+
 $q = isset($_GET['q']) ? $conn->real_escape_string($_GET['q']) : '';
 $habilitadoFiltro = isset($_GET['habilitado']) && $_GET['habilitado'] !== '' ? (int) $_GET['habilitado'] : null;
 $orden = isset($_GET['orden']) ? $_GET['orden'] : null;

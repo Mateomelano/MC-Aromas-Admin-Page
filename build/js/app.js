@@ -336,52 +336,52 @@ $(document).ready(function () {
     cargarProductos(query, filtroCheckbox.data("state"));
   });
 
-  // 🛠️ Control del ciclo de estados del checkbox de filtro
-  $("#filter-habilitado").on("click", function () {
-    let currentState = $(this).data("state");
+// 🟢 Ciclo de estados para el filtro de habilitados
+$("#filter-habilitado").on("click", function () {
+  let currentState = $(this).data("state");
 
-    if (currentState === null || currentState === undefined) {
-      $(this)
-        .data("state", 1)
-        .prop("checked", true)
-        .prop("indeterminate", false); // Mostrar solo habilitados
-    } else if (currentState === 1) {
-      $(this)
-        .data("state", 0)
-        .prop("checked", false)
-        .prop("indeterminate", false); // Mostrar solo no habilitados
-    } else {
-      $(this)
-        .data("state", null)
-        .prop("checked", false)
-        .prop("indeterminate", true); // Mostrar todos
-    }
+  if (currentState === null || currentState === undefined) {
+      $(this).data("state", 1).prop("checked", true).prop("indeterminate", false);
+  } else if (currentState === 1) {
+      $(this).data("state", 0).prop("checked", false).prop("indeterminate", false);
+  } else {
+      $(this).data("state", null).prop("checked", false).prop("indeterminate", true);
+  }
 
-    let query = $("#search-input").val();
-    let filtroEstado = $(this).data("state");
-    cargarProductos(query, filtroEstado);
-  });
+  let query = $("#search-input").val();
+  let filtroEstado = $(this).data("state");
+  cargarProductos(query, filtroEstado);
+});
 
-  // ✅ Delegación de eventos para cambiar el estado del checkbox individualmente
-  $(document).on("change", ".toggle-habilitado", function () {
-    debugger;
-    let productId = $(this).data("id");
-    let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
-    $.post(
-      "src/php/editar_producto.php",
-      { id: productId, habilitado: nuevoEstado },
-      function () {
-        console.log("Estado actualizado");
-        // 🔄 Recargar productos para sincronizar la tabla
-        let query = $("#search-input").val();
-        let filtroEstado = $("#filter-habilitado").data("state");
-        cargarProductos(query, filtroEstado);
+  // 🔄 Controlar los checkboxes individuales para cada producto
+$(document).on("change", ".toggle-habilitado", function () {
+  debugger
+  let productId = $(this).data("id");
+  let nuevoEstado = $(this).is(":checked") ? 1 : 0;
+
+  $.ajax({
+      url: "src/php/editar_producto.php",
+      type: "POST",
+      data: { id: productId, habilitado: nuevoEstado },
+      dataType: "json",
+      success: function (response) {
+          if (response.success) {
+              console.log("Producto actualizado correctamente.");
+              let query = $("#search-input").val();
+              let filtroEstado = $("#filter-habilitado").data("state");
+              cargarProductos(query, filtroEstado); // Refrescar productos después del cambio
+          } else {
+              console.error("Error al actualizar producto:", response.error);
+          }
+      },
+      error: function () {
+          console.error("Error al intentar actualizar el producto.");
       }
-    ).fail(function () {
-      alert("Error al actualizar el estado");
-    });
   });
+});
+
+
   //Funcion Exportar Excel
 
   // Evento al hacer clic en el botón Excel
