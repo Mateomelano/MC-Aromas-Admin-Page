@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lexend', sans-serif;
+    background-color: #f0f4f8;
+}
+
+.notebook-container {
+    height: 60vh;
+    width:  80vh;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f5f0e1;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 1px solid #d1b894;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Simulación de anillas */
+.notebook-container::before,
+.notebook-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #ddd,
+        #ddd 6px,
+        #f5f0e1 6px,
+        #f5f0e1 12px
+    );
+}
+
+.notebook-container::before {
+    left: -20px;
+}
+
+.notebook-container::after {
+    right: -20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #4b3f35;
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 0px #d1b894;
+}
+
+textarea {
+    width: 100%;
+    height: 400px;
+    padding: 15px;
+    border: 2px solid #d1b894;
+    border-radius: 8px;
+    outline: none;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-color: #fffdf5;
+    transition: border-color 0.3s;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Lexend', sans-serif;
+}
+
+textarea:focus {
+    border-color: #b38b59;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #b38b59;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #8f6c46;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #b38b59;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #8f6c46;
+}
+
+button:active {
+    transform: scale(0.98);
+}

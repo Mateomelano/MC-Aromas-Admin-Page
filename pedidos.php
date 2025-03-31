@@ -8,7 +8,7 @@
     <!-- Estilos -->
     <link rel="stylesheet" href="build/css/app.css?v=<?php echo time(); ?>">
     <!-- JS -->
-    <script src="build/js/banners.js?v=<?php echo time(); ?>" defer></script>
+    <script src="build/js/pedidos.js?v=<?php echo time(); ?>" defer></script>
     <!-- FUENTE LEXEND-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,11 +26,14 @@
         </ul>
       </nav>
     </aside>
-        <main class="content-banner">
-        <h2>Gestión de Banners</h2>
-        <label for="uploadBanner" id="uploadLabel">Agregar Imagen</label>
-        <input type="file" id="uploadBanner" accept="image/*">
-        <div id="bannerContainer"></div>
-        </main>
+
+    <div class="notebook-container">
+        <h1>Libreta de Anotaciones</h1>
+        <textarea id="notebook" placeholder="Escribe tus anotaciones aquí..."></textarea>
+        <button id="copyButton">Copiar Texto</button>
+        <button id="clearButton">Limpiar Todo</button>
+    </div>
+
+
   </body>
 </html>

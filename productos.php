@@ -27,6 +27,7 @@
                 <li><a href="index.php">Información</a></li>
                 <li><a href="productos.php">Productos</a></li>
                 <li><a href="banners.php">Banners</a></li>
+                <li><a href="pedidos.php">Pedidos</a></li>
             </ul>
         </nav>
     </aside>
