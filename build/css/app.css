@@ -793,8 +793,8 @@ body {
 }
 
 .notebook-container {
-  height: 60vh;
-  width: 80vh;
+  height: 90vh;
+  width: 120vh;
   margin: 40px auto;
   padding: 20px;
   background: #f5f0e1;
@@ -835,13 +835,13 @@ h1 {
 
 textarea {
   width: 100%;
-  height: 400px;
+  height: 70vh;
   padding: 15px;
   border: 2px solid #d1b894;
   border-radius: 8px;
   outline: none;
   resize: none;
-  font-size: 1rem;
+  font-size: 2rem;
   line-height: 1.5;
   background-color: #fffdf5;
   transition: border-color 0.3s;
@@ -891,6 +891,7 @@ button {
   transition: background-color 0.3s, transform 0.1s;
   font-size: 1rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: "Lexend", sans-serif;
 }
 
 button:hover {

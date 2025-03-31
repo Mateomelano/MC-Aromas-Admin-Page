@@ -13,6 +13,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
+    <!-- PDF-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.plugin.standard_fonts.min.js"></script>
+
   </head>
   <body>
     <aside class="sidebar">
@@ -29,9 +33,10 @@
 
     <div class="notebook-container">
         <h1>Libreta de Anotaciones</h1>
-        <textarea id="notebook" placeholder="Escribe tus anotaciones aquí..."></textarea>
+        <textarea id="notebook" placeholder="Escribe tus anotaciones aquí... "></textarea>
         <button id="copyButton">Copiar Texto</button>
         <button id="clearButton">Limpiar Todo</button>
+        <button id="exportPDF">Descargar PDF</button>
     </div>
 
 

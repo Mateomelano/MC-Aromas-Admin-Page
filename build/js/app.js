@@ -49,9 +49,13 @@ $(document).ready(function () {
   const cloudinaryPreset = "McaromasPics"; // Reemplaza con tu preset de Cloudinary
 
   $("#formAgregar").submit(async function (e) {
+    debugger
     e.preventDefault();
     let form = document.getElementById("formAgregar");
     let formData = new FormData(form);
+
+    let precioMayorista = $("#precioMayoristaAgregar").val();
+    formData.append("precioMayorista", precioMayorista);
 
     // Obtener el valor del select y del input
     let marcaSeleccionada = $("#marcaAgregar").val();
@@ -141,13 +145,16 @@ $(document).ready(function () {
     let precio = row.find("td:eq(5)").text().replace("$", "").trim();
     $("#precioEditar").val(precio);
 
-    let habilitado = row.find("td:eq(6) input[type='checkbox']").is(":checked")
+    let preciomayorista = row.find("td:eq(6)").text().replace("$", "").trim();
+    $("#preciomayoristaEditar").val(preciomayorista);
+
+    let habilitado = row.find("td:eq(7) input[type='checkbox']").is(":checked")
       ? "1"
       : "0";
     $("#habilitadoEditar").val(habilitado);
 
     // 📌 NUEVO: Obtener la URL de la imagen actual desde un atributo data o columna oculta
-    let imagenUrl = row.find("td:eq(7) img").attr("src"); // CORRECTO
+    let imagenUrl = row.find("td:eq(8) img").attr("src"); // CORRECTO
 
     // Mostrar la imagen actual en el modal si existe
     if (imagenUrl) {
@@ -172,7 +179,9 @@ $(document).ready(function () {
     formData.append("descripcion", $("#descripcionEditar").val());
     formData.append("categoria", $("#categoriaEditar").val());
     formData.append("precio", $("#precioEditar").val());
+    formData.append("preciomayorista", $("#preciomayoristaEditar").val());
     formData.append("habilitado", $("#habilitadoEditar").val());
+    console.log(formData);
 
     let marcaSeleccionada = $("#marcaEditar").val();
     let nuevaMarca = $("#nuevaMarcaEditar").val().trim();
@@ -240,84 +249,85 @@ $(document).ready(function () {
   });
 
   // filtro precio
-  let ordenPrecio = null; // Estado inicial (sin orden)
-  // ✅ Actualiza el estado de ordenPrecio antes de la llamada AJAX
-  ordenPrecio = $(this).data("order");
-  $("#ordenar-precio").click(function () {
-    debugger;
+
+  $(".orden-icon").click(function () {
+    let columna = $(this).attr("id") === "ordenar-precio" ? "precio" : "preciomayorista"; // Identifica qué columna ordenar
     let ordenActual = $(this).data("order");
 
-    if (ordenActual === "null") {
-      ordenPrecio = "asc"; // 🔼 Orden Ascendente
-      $(this).data("order", "asc").text("🔽");
+    if (!ordenActual || ordenActual === "null") {
+        ordenActual = "asc"; // 🔼 Ascendente
+        $(this).data("order", "asc").text("🔽");
     } else if (ordenActual === "asc") {
-      ordenPrecio = "desc"; // 🔽 Orden Descendente
-      $(this).data("order", "desc").text("🔼");
+        ordenActual = "desc"; // 🔽 Descendente
+        $(this).data("order", "desc").text("🔼");
     } else {
-      ordenPrecio = null; // Sin orden, se muestran todos los productos sin filtrar
-      $(this).data("order", "null").text("🔼🔽");
+        ordenActual = null; // Sin orden
+        $(this).data("order", "null").text("🔼🔽");
     }
-
-    // ✅ Actualiza el estado de ordenPrecio antes de la llamada AJAX
-    ordenPrecio = $(this).data("order");
 
     let query = $("#search-input").val();
     let habilitado = $("#filter-habilitado").data("state");
 
-    cargarProductos(query, habilitado, ordenPrecio);
+    // ✅ Pasamos también la columna a ordenar
+    cargarProductos(query, habilitado, ordenActual, columna);
+});
+
+function cargarProductos(query = "", habilitadoFiltro = null, orden = null, columna = "precio") {
+  debugger;
+  let data = { q: query };
+  if (habilitadoFiltro !== null) {
+      data.habilitado = habilitadoFiltro;
+  }
+  if (orden) {
+      data.orden = orden;
+  }
+  if (columna) {
+      data.columna = columna;
+  }
+
+  $.ajax({
+      url: "src/php/get_productos.php",
+      type: "GET",
+      data: data,
+      dataType: "json",
+      success: function (data) {
+          let tableBody = $("#product-table-body");
+          tableBody.empty();
+
+          if (data.length > 0) {
+              data.forEach(function (producto) {
+                  let checked = producto.habilitado == 1 ? "checked" : "";
+                  let row = `<tr>
+                              <td>${producto.id}</td>
+                              <td>${producto.nombre}</td>
+                              <td>${producto.descripcion}</td>
+                              <td>${producto.categoria}</td>
+                              <td>${producto.marca}</td>
+                              <td>$${parseFloat(producto.precio).toFixed(2)}</td>
+                              <td>$${parseFloat(producto.preciomayorista).toFixed(2)}</td>
+                              <td>
+                                  <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
+                              </td>
+                              <td>
+                                  <img src="${producto.imagen}" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
+                              </td>
+                              <td>
+                                  <button class='edit-btn' data-id='${producto.id}'>✏️</button>
+                                  <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
+                              </td>
+                          </tr>`;
+                  tableBody.append(row);
+              });
+          } else {
+              tableBody.append("<tr><td colspan='9'>No hay productos disponibles</td></tr>");
+          }
+      },
+      error: function () {
+          $("#product-table-body").append("<tr><td colspan='9'>Error al cargar los productos</td></tr>");
+      }
   });
-
-  function cargarProductos(query = "", habilitadoFiltro = null, orden = null) {
-    debugger;
-    let data = { q: query };
-    if (habilitadoFiltro !== null) {
-        data.habilitado = habilitadoFiltro; // 🔥 Asegúrate de pasar este filtro en la solicitud
-    }
-    if (orden) {
-        data.orden = orden;
-    }
-
-    $.ajax({
-        url: "src/php/get_productos.php",
-        type: "GET",
-        data: data,
-        dataType: "json",
-        success: function (data) {
-            let tableBody = $("#product-table-body");
-            tableBody.empty();
-
-            if (data.length > 0) {
-                data.forEach(function (producto) {
-                    let checked = producto.habilitado == 1 ? "checked" : "";
-                    let row = `<tr>
-                                <td>${producto.id}</td>
-                                <td>${producto.nombre}</td>
-                                <td>${producto.descripcion}</td>
-                                <td>${producto.categoria}</td>
-                                <td>${producto.marca}</td>
-                                <td>$${parseFloat(producto.precio).toFixed(2)}</td>
-                                <td>
-                                    <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
-                                </td>
-                                <td>
-                                    <img src="${producto.imagen}" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
-                                </td>
-                                <td>
-                                    <button class='edit-btn' data-id='${producto.id}'>✏️</button>
-                                    <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
-                                </td>
-                            </tr>`;
-                    tableBody.append(row);
-                });
-            } else {
-                tableBody.append("<tr><td colspan='9'>No hay productos disponibles</td></tr>");
-            }
-        },
-        error: function () {
-            $("#product-table-body").append("<tr><td colspan='9'>Error al cargar los productos</td></tr>");
-        }
-    });
 }
+
 
 
   // 🟢 Estado inicial: intermedio (todos los productos)
@@ -402,6 +412,7 @@ $(document).on("change", ".toggle-habilitado", function () {
       "Categoría",
       "Marca",
       "Precio",
+      "Precio Mayorista",
       "Habilitado",
     ];
     data.push(headers);
@@ -424,6 +435,7 @@ $(document).on("change", ".toggle-habilitado", function () {
           cells.eq(3).text().trim(), // Categoría
           cells.eq(4).text().trim(), // Marca
           cells.eq(5).text().trim(), // Precio
+          cells.eq(6).text().trim(), // Precio
           habilitadoIcon, // Habilitado con ícono de texto
         ];
         data.push(rowData);

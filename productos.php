@@ -52,6 +52,9 @@
                         <th>Precio 
                             <span id="ordenar-precio" class="orden-icon" data-order="null">🔼🔽</span>
                         </th>
+                        <th>Precio Mayorista 
+                            <span id="ordenar-preciomayorista" class="orden-icon" data-order="null">🔼🔽</span>
+                        </th>
                         <th>Habilitado 
                             <label class="checkbox-container">
                                 <input type="checkbox" id="filter-habilitado" data-state="null"> <!-- Asegúrate de agregar data-state -->
@@ -94,6 +97,9 @@
             <label>Precio:</label>
             <input type="number" id="precioAgregar" name="precio" required>
 
+            <label>Precio Mayorista:</label>
+            <input type="number" id="precioMayoristaAgregar" name="precioMayorista" required>
+
             <label>Imagen:</label>
             <input type="file" id="imagenAgregar" name="imagen" accept="image/*">
 
@@ -113,7 +119,6 @@
 <div id="modalEditar" class="modal">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
-        <h2>Editar Producto</h2>
         <form id="formEditar" enctype="multipart/form-data">
             <input type="hidden" id="idEditar" name="id">
 
@@ -135,6 +140,9 @@
 
             <label>Precio:</label>
             <input type="number" id="precioEditar" name="precio" required>
+
+            <label>Precio Mayorista:</label>
+            <input type="number" id="preciomayoristaEditar" name="precioMayorista" required>
 
             <label>Imagen Actual:</label>
             <div>

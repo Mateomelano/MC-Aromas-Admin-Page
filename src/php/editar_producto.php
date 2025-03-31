@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $habilitado = isset($_POST['habilitado']) ? intval($_POST['habilitado']) : null;
 
     // 🔒 Preparar consulta según los datos enviados
-    if ($habilitado !== null && empty($_POST['nombre']) && empty($_POST['descripcion']) && empty($_POST['categoria']) && empty($_POST['marca']) && empty($_POST['precio']) && empty($_POST['imagenUrlActual'])) {
+    if ($habilitado !== null && empty($_POST['nombre']) && empty($_POST['descripcion']) && empty($_POST['categoria']) && empty($_POST['marca']) && empty($_POST['precio']) && empty($_POST['preciomayorista']) && empty($_POST['imagenUrlActual'])) {
         
         // ✅ Solo actualizar el campo 'habilitado'
         $stmt = $conn->prepare("UPDATE productos SET habilitado = ? WHERE id = ?");
@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $categoria = isset($_POST['categoria']) ? $conn->real_escape_string($_POST['categoria']) : null;
         $marca = isset($_POST['marca']) ? $conn->real_escape_string($_POST['marca']) : null;
         $precio = isset($_POST['precio']) ? floatval($_POST['precio']) : null;
+        $preciomayorista = isset($_POST['preciomayorista']) ? floatval($_POST['preciomayorista']) : null;
         $imagenUrl = isset($_POST['imagenUrl']) ? $conn->real_escape_string($_POST['imagenUrl']) : null;
 
         // Si se proporciona la imagen actual pero no una nueva, mantener la actual
@@ -37,10 +38,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Consulta para actualizar todos los campos
         $stmt = $conn->prepare("UPDATE productos 
-            SET nombre = ?, descripcion = ?, categoria = ?, marca = ?, precio = ?, habilitado = ?, imagen = ?
+            SET nombre = ?, descripcion = ?, categoria = ?, marca = ?, precio = ? , preciomayorista = ? , habilitado = ?, imagen = ?
             WHERE id = ?");
 
-        $stmt->bind_param("ssssdisi", $nombre, $descripcion, $categoria, $marca, $precio, $habilitado, $imagenUrl, $id);
+        $stmt->bind_param("ssssddisi", $nombre, $descripcion, $categoria, $marca, $precio, $preciomayorista, $habilitado, $imagenUrl, $id);
+
     }
 
     if ($stmt->execute()) {

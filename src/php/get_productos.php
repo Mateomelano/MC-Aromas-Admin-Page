@@ -1,44 +1,41 @@
 <?php
-include 'db.php'; // Conexión a la base de datos
-
+include 'db.php';
 
 $q = isset($_GET['q']) ? $conn->real_escape_string($_GET['q']) : '';
 $habilitadoFiltro = isset($_GET['habilitado']) && $_GET['habilitado'] !== '' ? (int) $_GET['habilitado'] : null;
 $orden = isset($_GET['orden']) ? $_GET['orden'] : null;
+$columna = isset($_GET['columna']) && in_array($_GET['columna'], ['precio', 'preciomayorista']) ? $_GET['columna'] : null; // Verifica que la columna sea válida
 
-$sql = "SELECT id, nombre, categoria, marca, precio, habilitado, descripcion, imagen FROM productos";
+$sql = "SELECT id, nombre, categoria, marca, precio, preciomayorista, habilitado, descripcion, imagen FROM productos";
 $filtros = [];
 
-// 🟢 Aplicar filtro de búsqueda
+// 🟢 Filtro de búsqueda
 if (!empty($q)) {
     $filtros[] = "(id LIKE '%$q%' OR 
                    nombre LIKE '%$q%' OR
                    descripcion LIKE '%$q%' OR 
                    categoria LIKE '%$q%' OR 
                    marca LIKE '%$q%' OR 
-                   imagen LIKE '%$q%' OR 
+                   imagen LIKE '%$q%' OR
+                   preciomayorista LIKE '%$q%' OR 
                    precio LIKE '%$q%')";
 }
 
-// 🟢 Aplicar filtro de habilitado si es 1 o 0
+// 🟢 Filtro de habilitado
 if ($habilitadoFiltro === 1) {
     $filtros[] = "habilitado = 1";
 } elseif ($habilitadoFiltro === 0) {
     $filtros[] = "habilitado = 0";
 }
 
-// Si hay filtros, agregarlos a la consulta
+// Si hay filtros, agrégales a la consulta
 if (!empty($filtros)) {
     $sql .= " WHERE " . implode(" AND ", $filtros);
 }
 
-// 🟢 Aplicar ordenación de precio si se envió el parámetro correcto
-if ($orden === "asc") {
-    $sql .= " ORDER BY precio ASC";
-} elseif ($orden === "desc") {
-    $sql .= " ORDER BY precio DESC";
-} elseif ($orden === "random") {
-    $sql .= " ORDER BY RAND()";
+// 🟢 Ordenar correctamente
+if ($columna && ($orden === "asc" || $orden === "desc")) {
+    $sql .= " ORDER BY $columna $orden";
 }
 
 $result = $conn->query($sql);
@@ -52,3 +49,4 @@ if ($result && $result->num_rows > 0) {
 
 echo json_encode($productos);
 ?>
+
