@@ -450,4 +450,5 @@ $(document).on("change", ".toggle-habilitado", function () {
     // Descargar el archivo
     XLSX.writeFile(wb, "productos.xlsx");
   }
+  
 });
