@@ -36,3 +36,8 @@
     </div>
   </body>
 </html>
+<script>
+        if (!sessionStorage.getItem("loggedIn")) {
+            window.location.href = "login.php"; // Si no está logueado, redirigir a login
+        }
+    </script>

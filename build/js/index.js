@@ -20,7 +20,7 @@ function actualizarInformacion() {
   
   setInterval(actualizarInformacion, 5000);
 
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     if (sessionStorage.getItem("loggedIn")) {
       document.getElementById("login-screen").style.display = "none";
       document.getElementById("main-content").style.display = "block";

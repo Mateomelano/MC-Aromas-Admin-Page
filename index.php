@@ -15,13 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
   </head>
   <body>
-    <div id="login-screen" class="login-container">
-      <h2>Iniciar Sesión</h2>
-      <input class="input-login" type="text" id="username" placeholder="Usuario" />
-      <input class="input-login" type="password" id="password" placeholder="Contraseña" />
-      <button class="button-login" onclick="login()">Ingresar</button>
-      <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
-    </div>
 
     <div id="main-content">
       <aside class="sidebar">
@@ -82,6 +75,12 @@
       });
     </script>
 
+    
+    <script>
+        if (!sessionStorage.getItem("loggedIn")) {
+            window.location.href = "login.php"; // Si no está logueado, redirigir a login
+        }
+    </script>
 
 
 

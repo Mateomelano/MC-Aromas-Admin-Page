@@ -12,7 +12,7 @@
     padding: 20px;
     margin: 0 auto;
     max-width: 1400px; // Limita el ancho en pantallas grandes
-    margin-left: 330px; // Desplaza el contenido hacia la derecha según el ancho del sidebar
+    margin-left: 350px; // Desplaza el contenido hacia la derecha según el ancho del sidebar
 }
 
 
@@ -160,3 +160,9 @@ button:hover {
     cursor: pointer;
 }
 
+@media screen and (max-width: 1700px) {
+    .content {
+        margin-left: 250px; // Desplaza el contenido hacia la derecha en pantallas pequeñas
+    }
+    
+}

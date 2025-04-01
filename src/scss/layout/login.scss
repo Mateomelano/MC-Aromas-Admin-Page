@@ -1,28 +1,73 @@
+/* Estilos generales */
+.login-body {
+    font-family: 'Lexend', sans-serif;
+    background-color: #f4f7fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
-  .login-container {
+/* Contenedor del Login */
+.login-container {
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-  }
-  .input-login {
+    width: 350px;
+}
+
+/* Título */
+.login-container h2 {
+    color: #d32f2f;
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* Campos de entrada */
+.input-login {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  .button-login {
-    background: #007bff;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover y focus en los inputs */
+.input-login:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 5px rgba(211, 47, 47, 0.3);
+}
+
+/* Botón de login */
+.button-login {
+    background: #d32f2f;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     width: 100%;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-  }
-  .button-login:hover {
-    background: #0056b3;
-  }
-  
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover */
+.button-login:hover {
+    background: #b71c1c;
+}
+
+/* Mensaje de error */
+#error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+}
