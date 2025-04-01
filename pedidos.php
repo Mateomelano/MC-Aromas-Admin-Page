@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.plugin.standard_fonts.min.js"></script>
 
   </head>
-  <body>
+  <body >
     <aside class="sidebar">
       <nav>
         <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo" alt="">
@@ -34,13 +34,13 @@
 
     <div class="content-pedidos">
       <div class="notebook-container">
-          <h1>Libreta de Anotaciones</h1>
           <textarea id="notebook" placeholder="Escribe tus anotaciones aquí... "></textarea>
           <button id="copyButton">Copiar Texto</button>
           <button id="clearButton">Limpiar Todo</button>
           <button id="exportPDF">Descargar PDF</button>
       </div>
     </div>
+
   </body>
 </html>
 <script>
