@@ -23,6 +23,7 @@
           <li><a href="productos.php">Productos</a></li>
           <li><a href="banners.php">Banners</a></li>
           <li><a href="pedidos.php">Pedidos</a></li>
+          <button id="logout-button">Cerrar Sesión</button>
         </ul>
       </nav>
     </aside>
@@ -40,4 +41,8 @@
         if (!sessionStorage.getItem("loggedIn")) {
             window.location.href = "login.php"; // Si no está logueado, redirigir a login
         }
+              document.getElementById("logout-button").addEventListener("click", function () {
+          sessionStorage.removeItem("loggedIn"); // Elimina la sesión
+          window.location.href = "login.php"; // Redirige al login
+      });
     </script>

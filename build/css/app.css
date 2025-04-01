@@ -1052,4 +1052,28 @@ button:active {
   font-size: 14px;
   font-weight: 400;
   opacity: 1; /* Asegura que el color sea visible en algunos navegadores */
+}
+
+#logout-button {
+  background-color: #d32f2f; /* Color dorado */
+  color: white; /* Texto en blanco */
+  font-weight: bold;
+  border: 2px solid black; /* Borde negro */
+  padding: 5px 20px;
+  border-radius: 10px; /* Bordes redondeados */
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#logout-button:hover {
+  background-color: #b71c1c; /* Color dorado más oscuro */
+  transform: scale(1.05);
+}
+
+#logout-button:active {
+  transform: scale(0.95);
 }/*# sourceMappingURL=app.css.map */
