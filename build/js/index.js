@@ -19,3 +19,23 @@ function actualizarInformacion() {
   }
   
   setInterval(actualizarInformacion, 5000);
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (sessionStorage.getItem("loggedIn")) {
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+    }
+  });
+  
+  function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    if (username === "1" && password === "1") {
+      sessionStorage.setItem("loggedIn", true);
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+    } else {
+      document.getElementById("error-message").style.display = "block";
+    }
+  }
+  

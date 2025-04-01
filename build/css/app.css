@@ -438,7 +438,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: end;
-  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .sidebar ul {
@@ -486,6 +491,7 @@ li:hover {
   padding: 20px;
   margin: 0 auto;
   max-width: 1400px;
+  margin-left: 330px;
 }
 
 #productos {
@@ -792,6 +798,14 @@ body {
   background-color: #f0f4f8;
 }
 
+.content-pedidos {
+  flex: 1;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  margin-left: 350px;
+}
+
 .notebook-container {
   height: 90vh;
   width: 120vh;
@@ -900,4 +914,46 @@ button:hover {
 
 button:active {
   transform: scale(0.98);
+}
+
+@media screen and (max-width: 1540px) {
+  .notebook-container {
+    height: 90vh;
+    width: 100vh;
+  }
+  .content-pedidos {
+    margin-left: 250px;
+  }
+  textarea {
+    height: 75vh;
+  }
+}
+.login-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.input-login {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-login {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-login:hover {
+  background: #0056b3;
 }/*# sourceMappingURL=app.css.map */

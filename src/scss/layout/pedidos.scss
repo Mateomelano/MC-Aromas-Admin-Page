@@ -6,6 +6,13 @@ body {
     background-color: #f0f4f8;
 }
 
+.content-pedidos{
+        flex: 1;
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+        margin-left: 350px;
+}
 
 
 .notebook-container {
@@ -123,4 +130,24 @@ button:hover {
 
 button:active {
     transform: scale(0.98);
+}
+
+
+//MEDIAQUERYS
+
+@media screen and (max-width: 1540px) {
+
+    .notebook-container{
+        height: 90vh;
+        width: 100vh;
+    }
+
+    .content-pedidos{
+        margin-left : 250px;
+    }
+
+    textarea{
+        height: 75vh;
+    }
+    
 }

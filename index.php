@@ -15,26 +15,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
   </head>
   <body>
-    <aside class="sidebar">
-      <nav>
-        <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo" alt="">
-        <ul>
-          <li><a href="index.php">Información</a></li>
-          <li><a href="productos.php">Productos</a></li>
-          <li><a href="banners.php">Banners</a></li>
-          <li><a href="pedidos.php">Pedidos</a></li>
-        </ul>
-      </nav>
-    </aside>
-    <main class="content">
-      <section id="informacion" class="informacion-section">
+    <div id="login-screen" class="login-container">
+      <h2>Iniciar Sesión</h2>
+      <input class="input-login" type="text" id="username" placeholder="Usuario" />
+      <input class="input-login" type="password" id="password" placeholder="Contraseña" />
+      <button class="button-login" onclick="login()">Ingresar</button>
+      <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
+    </div>
+
+    <div id="main-content">
+      <aside class="sidebar">
+        <nav>
+          <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo" alt="">
+          <ul>
+            <li><a href="index.php">Información</a></li>
+            <li><a href="productos.php">Productos</a></li>
+            <li><a href="banners.php">Banners</a></li>
+            <li><a href="pedidos.php">Pedidos</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <section id="informacion" class="informacion-section">
           <h2>Información General</h2>
           <div class="info-cards" id="info-cards">
             <!-- Aquí se cargarán las tarjetas dinámicamente -->
           </div>
-      </section>
-    </main>
-    
+        </section>
+      </main>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         fetch('src/php/get_info.php')
@@ -71,5 +81,11 @@
           .catch(error => console.error('Error al obtener la información:', error));
       });
     </script>
-  </body>
+
+
+
+
+
+</body>
+
 </html>

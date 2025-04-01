@@ -31,14 +31,14 @@
       </nav>
     </aside>
 
-    <div class="notebook-container">
-        <h1>Libreta de Anotaciones</h1>
-        <textarea id="notebook" placeholder="Escribe tus anotaciones aquí... "></textarea>
-        <button id="copyButton">Copiar Texto</button>
-        <button id="clearButton">Limpiar Todo</button>
-        <button id="exportPDF">Descargar PDF</button>
+    <div class="content-pedidos">
+      <div class="notebook-container">
+          <h1>Libreta de Anotaciones</h1>
+          <textarea id="notebook" placeholder="Escribe tus anotaciones aquí... "></textarea>
+          <button id="copyButton">Copiar Texto</button>
+          <button id="clearButton">Limpiar Todo</button>
+          <button id="exportPDF">Descargar PDF</button>
+      </div>
     </div>
-
-
   </body>
 </html>

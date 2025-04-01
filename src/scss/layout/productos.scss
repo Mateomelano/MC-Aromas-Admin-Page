@@ -1,5 +1,6 @@
 @use '../base/variables' as v;
 
+
 .container {
     display: flex;
     justify-content: center;
@@ -11,7 +12,9 @@
     padding: 20px;
     margin: 0 auto;
     max-width: 1400px; // Limita el ancho en pantallas grandes
+    margin-left: 330px; // Desplaza el contenido hacia la derecha según el ancho del sidebar
 }
+
 
 #productos {	
     display: flex;
