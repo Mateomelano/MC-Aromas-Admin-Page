@@ -1,7 +1,7 @@
 <?php
 include 'db.php';
 
-$result = $conn->query("SELECT * FROM imagenes");
+$result = $conn->query("SELECT * FROM banners");
 $imagenes = [];
 
 if ($result) {

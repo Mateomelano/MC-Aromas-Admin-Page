@@ -27,7 +27,7 @@ if (isset($_FILES['imagen'])) {
     if (isset($json['secure_url'])) {
         $url = $json['secure_url'];
 
-        $stmt = $conn->prepare("INSERT INTO imagenes (url) VALUES (?)");
+        $stmt = $conn->prepare("INSERT INTO banners (url) VALUES (?)");
         $stmt->bind_param("s", $url);
 
         if ($stmt->execute()) {

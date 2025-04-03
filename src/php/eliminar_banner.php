@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result['result'] === 'ok') {
         // Eliminar de la base de datos
-        $stmt = $conn->prepare("DELETE FROM imagenes WHERE id = ?");
+        $stmt = $conn->prepare("DELETE FROM banners WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $stmt->close();
