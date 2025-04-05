@@ -4,41 +4,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportPDFButton = document.getElementById('exportPDF');
     const notebook = document.getElementById('notebook');
 
-    let isInList = false;
-    let isUnderBrand = false;
-
     notebook.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            const text = notebook.value.trim();
-            let lines = text.split('\n');
-            let lastLine = lines[lines.length - 1].trim();
 
-            if (lastLine === '') return;
+            const start = notebook.selectionStart;
+            const end = notebook.selectionEnd;
+            const value = notebook.value;
 
-            if (isHeader(lastLine)) {
-                lastLine = lastLine.replace(/^- /, '').toUpperCase();
-                lines[lines.length - 1] = `\n    ${lastLine}`;
-                notebook.value = lines.join('\n') + '\n        - ';
-                isInList = true;
-                isUnderBrand = false;
-            } 
-            else if (isBrand(lastLine)) {
-                lastLine = lastLine.replace(/^- /, '').replace(/\*$/, '').toUpperCase();
-                lines[lines.length - 1] = `\n🔹 ${lastLine} 🔹\n`;
-                notebook.value = lines.join('\n') + '    ';
-                isInList = false;
-                isUnderBrand = true;
-            } 
-            else if (isInList) {
-                notebook.value += `\n        - `;
-            } 
-            else if (isUnderBrand) {
-                notebook.value += `\n    `;
-            } 
-            else {
-                notebook.value += `\n`;
+            const lines = value.substring(0, start).split('\n');
+            const currentLineIndex = lines.length - 1;
+            let currentLine = lines[currentLineIndex].trim();
+
+            if (currentLine === '') return;
+
+            if (currentLine.startsWith('- ')) {
+                currentLine = currentLine.slice(2).trim();
             }
+
+            let insertText = '';
+
+            const nowIsHeader = isHeader(currentLine);
+            const nowIsBrand = isBrand(currentLine);
+            const nowIsList = isListItem(lines[currentLineIndex]);
+            const nowIsIndented = isIndented(lines[currentLineIndex]);
+
+            if (nowIsHeader) {
+                const header = currentLine.replace(/:$/, '').toUpperCase();
+                lines[currentLineIndex] = `\n${header}:`;
+                insertText = '\n        - ';
+            } else if (nowIsBrand) {
+                const brand = currentLine.replace(/\*$/, '').toUpperCase();
+                lines[currentLineIndex] = `\n🔹 ${brand} 🔹\n`;
+                insertText = '    ';
+            } else if (nowIsList) {
+                insertText = '\n        - ';
+            } else if (nowIsIndented) {
+                insertText = '\n    ';
+            } else {
+                insertText = '\n';
+            }
+
+            const before = lines.join('\n');
+            const after = value.substring(end);
+
+            notebook.value = before + insertText + after;
+
+            const newCursorPos = before.length + insertText.length;
+            notebook.setSelectionRange(newCursorPos, newCursorPos);
+            notebook.focus();
         }
     });
 
@@ -51,19 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     clearButton.addEventListener('click', () => {
         notebook.value = '';
-        isInList = false;
-        isUnderBrand = false;
     });
 
     function isHeader(text) {
         return text.trim().endsWith(':');
     }
+
     function isBrand(text) {
-        return text.includes('🔹');
+        return text.trim().endsWith('*');
     }
-    function isBrand(text) {
-        return text.endsWith('*');
-    }
+
     function isBrandnew(text) {
         return text.includes('🔹');
     }
@@ -76,71 +87,72 @@ document.addEventListener('DOMContentLoaded', () => {
         return text.startsWith('    ');
     }
 
-    // Función para exportar el contenido a PDF con Lexend
-    // 🔹 Función para exportar a PDF con Lexend
+    // Exportador PDF con indentación jerárquica
     exportPDFButton.addEventListener('click', () => {
-        debugger
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // 1️⃣ Cargar fuente Lexend desde Base64
+        // Cargar la fuente Lexend
         loadLexendFont(doc);
-        doc.setFont("Lexend");
+        doc.setFont("Lexend", "normal");
 
-        let textLines = notebook.value.split('\n');
-        let y = 10;
-        debugger
-        textLines.forEach((line) => {
-            debugger
-            let trimmedLine = line.trim();
+        const lines = notebook.value.split('\n');
+        let y = 20;
+        let lineHeight = 8; // Espaciado entre líneas
 
-            if (isBrandnew(trimmedLine)) {
-                // Marcas: 🔹 SAPHIRUS 🔹 con fondo azul
+        lines.forEach((line) => {
+            const trimmed = line.trim();
+
+            if (trimmed === '') {
+                y += 5; // Más separación en líneas vacías
+                return;
+            }
+
+            if (isBrandnew(trimmed)) {
+                doc.setFontSize(22);
+                doc.setFont("Lexend", "bold");
+                if (doc.getFont().fontName !== "Lexend") {
+                    doc.setFont("Georgia", "bold"); // Alternativa
+                }
+                doc.setTextColor(31, 58, 147);
+                doc.text(10, y, trimmed.replace(/🔹/g, '').trim());
+                y += lineHeight + 3;
+
+            } else if (isHeader(trimmed)) {
+                doc.setFontSize(16);
+                doc.setFont("Lexend", "bold");
+                if (doc.getFont().fontName !== "Lexend") {
+                    doc.setFont("Georgia", "bold");
+                }
+                doc.setTextColor(44, 62, 80);
+                doc.text(15, y, trimmed);
+                y += lineHeight + 2;
+
+            } else if (isListItem(trimmed)) {
                 doc.setFontSize(14);
-                doc.setFillColor(0, 86, 179); // Azul
-                doc.setTextColor(255, 255, 255); // Blanco
-                doc.setFont("Lexend", "bold");
-                let cleanText = trimmedLine.replace(/🔹/g, '').trim();
-                let textWidth = doc.getTextWidth(cleanText) + 6;
-                doc.rect(10, y - 6, textWidth, 10, 'F');
-                doc.text(13, y, cleanText);
-                y += 12;
-
-            } else if (isHeader(trimmedLine)) {
-                // Títulos: "TEXTIL:", "SAHUMERIOS:"
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0);
-                doc.setFont("Lexend", "bold");
-                doc.text(10, y, trimmedLine);
-                y += 8;
-
-            } else if (isListItem(trimmedLine)) {
-                // Listas con sangría
-                doc.setFontSize(10);
                 doc.setFont("Lexend", "normal");
+                if (doc.getFont().fontName !== "Lexend") {
+                    doc.setFont("Times", "normal"); // Alternativa
+                }
                 doc.setTextColor(0, 0, 0);
-                doc.text(20, y, trimmedLine);
-                y += 6;
+                doc.text(25, y, `• ${trimmed.replace(/^[-•]\s*/, '')}`);
+                y += lineHeight;
 
-            } else if (isIndented(line)) {
-                // Texto con sangría (sin ser lista)
-                doc.setFontSize(10);
-                doc.setFont("Lexend", "normal");
-                doc.setTextColor(0, 0, 0);
-                doc.text(15, y, trimmedLine);
-                y += 5;
             } else {
-                // Texto normal sin formato especial
-                doc.setFontSize(10);
-                doc.setFont("Lexend", "normal");
+                doc.setFontSize(16);
+                doc.setFont("Lexend", "bold");
+                if (doc.getFont().fontName !== "Lexend") {
+                    doc.setFont("Georgia", "bold");
+                }
                 doc.setTextColor(0, 0, 0);
-                doc.text(10, y, trimmedLine);
-                y += 5;
+                doc.text(15, y, `${trimmed}:`);
+                y += lineHeight + 3;
             }
         });
 
         doc.save('notas.pdf');
     });
+
     // 🔹 Función para cargar la fuente Lexend desde Base64
     function loadLexendFont(doc) {
         const lexendBase64 = `
