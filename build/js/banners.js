@@ -23,9 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function cargarBanners() {
+    debugger
     fetch("src/php/get_banners.php")
       .then((response) => response.json())
+
       .then((data) => {
+        debugger
+        console.log(data);
         const bannerContainer = document.getElementById("bannerContainer");
         bannerContainer.innerHTML = "";
   

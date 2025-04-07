@@ -422,7 +422,7 @@ $(document).on("change", ".toggle-habilitado", function () {
       let cells = $(this).find("td");
       if (cells.length > 0) {
         let habilitadoIcon = cells
-          .eq(6)
+          .eq(7)
           .find("input[type='checkbox']")
           .is(":checked")
           ? "✅ Sí"

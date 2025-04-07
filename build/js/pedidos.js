@@ -161,5 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         doc.addFileToVFS("Lexend-Regular.ttf", atob(lexendBase64));
         doc.addFont("Lexend-Regular.ttf", "Lexend", "normal");
+        doc.addFont("Lexend-Regular.ttf", "Lexend", "bold");
     }
 });

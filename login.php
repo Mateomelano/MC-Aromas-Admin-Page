@@ -13,7 +13,7 @@
 <body class="login-body">
     <div class="login-container">
         <!-- Logo -->
-        <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo" alt="MC Aromas Logo">
+        <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg" class="logo" alt="MC Aromas Logo">
         
         <h2>Iniciar Sesión</h2>
         <p>Ingresa tus credenciales</p>

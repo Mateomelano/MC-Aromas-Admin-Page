@@ -22,7 +22,7 @@
     
     <aside class="sidebar">
         <nav>
-            <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743269642/wxzatw5ku2y5tnyb4nlf.jpg" class="logo"  alt="">
+            <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg" class="logo"  alt="">
             <ul>
                 <li><a href="index.php">Información</a></li>
                 <li><a href="productos.php">Productos</a></li>
@@ -93,13 +93,13 @@
                 <option value="" disabled selected>Seleccionar marca existente</option>
                 <!-- Aquí se van a cargar las marcas desde la base de datos -->
             </select>
-            <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca (Opcional)">
+            <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca">
 
             <label>Precio:</label>
-            <input type="number" id="precioAgregar" name="precio" required>
+            <input type="number" id="precioAgregar" name="precio" step="0.01" required>
 
             <label>Precio Mayorista:</label>
-            <input type="number" id="precioMayoristaAgregar" name="precioMayorista" required>
+            <input type="number" id="precioMayoristaAgregar" step="0.01" name="precioMayorista" required>
 
             <label>Imagen:</label>
             <input type="file" id="imagenAgregar" name="imagen" accept="image/*">
@@ -136,14 +136,14 @@
             <select id="marcaEditar" name="marca" required>
                 <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
             </select>
-            <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca (Opcional)">
+            <input type="text" id="nuevaMarcaEditar"  placeholder="Nueva Marca">
             <br>
 
             <label>Precio:</label>
-            <input type="number" id="precioEditar" name="precio" required>
+            <input type="number" id="precioEditar" name="precio" step="0.01" required>
 
             <label>Precio Mayorista:</label>
-            <input type="number" id="preciomayoristaEditar" name="precioMayorista" required>
+            <input type="number" id="preciomayoristaEditar" name="precioMayorista" step="0.01" required>
 
             <label>Imagen Actual:</label>
             <div>

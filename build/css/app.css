@@ -860,7 +860,7 @@ textarea::placeholder {
 button {
   margin-top: 15px;
   padding: 10px 20px;
-  background-color: #b38b59;
+  background-color: #e63946;
   color: white;
   border: none;
   border-radius: 8px;
@@ -871,7 +871,7 @@ button {
 }
 
 button:hover {
-  background-color: #8f6c46;
+  background-color: #e63946;
 }
 
 button:active {
