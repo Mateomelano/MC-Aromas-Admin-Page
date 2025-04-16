@@ -1001,7 +1001,7 @@ button:active {
 }
 
 #logout-button {
-  background-color: #d32f2f; /* Color dorado */
+  background-color: #000000; /* Color dorado */
   color: white; /* Texto en blanco */
   font-weight: bold;
   border: 2px solid black; /* Borde negro */
