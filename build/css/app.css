@@ -686,6 +686,10 @@ button:hover {
   background: #45a049;
 }
 
+.modal-content h2 {
+  font-size: 2rem;
+}
+
 #search-input {
   width: 80vh;
   padding: 10px;

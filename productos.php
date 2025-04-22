@@ -1,12 +1,13 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>MC Aromas - Productos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg">
+    <link rel="icon" type="image/jpeg"
+        href="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importar jQuery -->
     <!-- Estilos -->
     <link rel="stylesheet" href="build/css/app.css?v=<?php echo time(); ?>">
@@ -19,11 +20,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet" />
 </head>
+
 <body>
-    
+
     <aside class="sidebar">
         <nav>
-            <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg" class="logo"  alt="">
+            <img src="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg"
+                class="logo" alt="">
             <ul>
                 <li><a href="index.php">Información</a></li>
                 <li><a href="productos.php">Productos</a></li>
@@ -37,7 +40,7 @@
     <main class="content">
         <section id="productos" class="productos-section">
             <h2>Lista de Productos</h2>
-            <div class = "filter-container">
+            <div class="filter-container">
                 <button id="add-product-btn" class="btn">➕ Agregar Producto</button>
                 <input type="text" id="search-input" placeholder="Buscar...🔍">
                 <button id="export-excel-btn" class="btn-excel">📊 Exportar Excel</button>
@@ -51,15 +54,16 @@
                         <th>Descripcion</th>
                         <th>Categoría</th>
                         <th>Marca</th>
-                        <th>Precio 
+                        <th>Precio
                             <span id="ordenar-precio" class="orden-icon" data-order="null">🔼🔽</span>
                         </th>
-                        <th>Precio Mayorista 
+                        <th>Precio Mayorista
                             <span id="ordenar-preciomayorista" class="orden-icon" data-order="null">🔼🔽</span>
                         </th>
-                        <th>Habilitado 
+                        <th>Habilitado
                             <label class="checkbox-container">
-                                <input type="checkbox" id="filter-habilitado" data-state="null"> <!-- Asegúrate de agregar data-state -->
+                                <input type="checkbox" id="filter-habilitado" data-state="null">
+                                <!-- Asegúrate de agregar data-state -->
                             </label>
                         </th>
                         </th>
@@ -74,123 +78,133 @@
         </section>
     </main>
 
-<!-- Modal Agregar Producto -->
-<div id="modalAgregar" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="cerrarModal('modalAgregar')">&times;</span>
-        <h2>Agregar Producto</h2>
-        <form id="formAgregar" enctype="multipart/form-data">
-            <label>Nombre:</label>
-            <input type="text" id="nombreAgregar" name="nombre" required>
+    <!-- Modal Agregar Producto -->
+    <div id="modalAgregar" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('modalAgregar')">&times;</span>
+            <h2>Agregar Producto</h2>
+            <form id="formAgregar" enctype="multipart/form-data">
+                <label>Nombre:</label>
+                <input type="text" id="nombreAgregar" name="nombre" required>
 
-            <label>Descripción:</label>
-            <input type="text" id="descripcionAgregar" name="descripcion" required>
-            
-            <label>Categoría:</label>
-            <input type="text" id="categoriaAgregar" name="categoria" required>
+                <label>Descripción:</label>
+                <input type="text" id="descripcionAgregar" name="descripcion" required>
 
-            <label>Marca:</label>
-            <select id="marcaAgregar" name="marcaSelect">
-                <option value="" disabled selected>Seleccionar marca existente</option>
-                <!-- Aquí se van a cargar las marcas desde la base de datos -->
-            </select>
-            <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca">
+                <label>Categoría:</label>
+                <select id="categoriaAgregar" name="categoriaSelect">
+                    <option value="" disabled selected>Seleccionar categoría existente</option>
+                    <!-- Aquí se van a cargar las categorías desde la base de datos -->
+                </select>
+                <input type="text" id="nuevaCategoriaAgregar" placeholder="o escribe una nueva categoría" />
 
-            <label>Precio:</label>
-            <input type="number" id="precioAgregar" name="precio" step="0.01" required>
+                <label>Marca:</label>
+                <select id="marcaAgregar" name="marcaSelect">
+                    <option value="" disabled selected>Seleccionar marca existente</option>
+                    <!-- Aquí se van a cargar las marcas desde la base de datos -->
+                </select>
+                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca">
 
-            <label>Precio Mayorista:</label>
-            <input type="number" id="precioMayoristaAgregar" step="0.01" name="precioMayorista" required>
+                <label>Precio:</label>
+                <input type="number" id="precioAgregar" name="precio" step="0.01" required>
 
-            <label>Imagen:</label>
-            <input type="file" id="imagenAgregar" name="imagen" accept="image/*">
+                <label>Precio Mayorista:</label>
+                <input type="number" id="precioMayoristaAgregar" step="0.01" name="precioMayorista" required>
 
-            <label>Habilitado:</label>
-            <select id="habilitadoAgregar" name="habilitado">
-                <option value="1">Sí</option>
-                <option value="0">No</option>
-            </select>
+                <label>Imagen:</label>
+                <input type="file" id="imagenAgregar" name="imagen" accept="image/*">
 
-            <button type="submit">Agregar</button>
-        </form>
+                <label>Habilitado:</label>
+                <select id="habilitadoAgregar" name="habilitado">
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+
+                <button type="submit">Agregar</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Modal Editar Producto -->
+    <!-- Modal Editar Producto -->
 
-<div id="modalEditar" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
-        <form id="formEditar" enctype="multipart/form-data">
-            <input type="hidden" id="idEditar" name="id">
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
+            <form id="formEditar" enctype="multipart/form-data">
+                <input type="hidden" id="idEditar" name="id">
 
-            <label>Nombre:</label>
-            <input type="text" id="nombreEditar" name="nombre" required>
+                <label>Nombre:</label>
+                <input type="text" id="nombreEditar" name="nombre" required>
 
-            <label>Descripción:</label>
-            <input type="text" id="descripcionEditar" name="descripcion" required>
+                <label>Descripción:</label>
+                <input type="text" id="descripcionEditar" name="descripcion" required>
 
-            <label>Categoría:</label>
-            <input type="text" id="categoriaEditar" name="categoria" required>
+                <label>Categoría:</label>
+                <select id="categoriaEditar" name="categoriaSelectEditar">
+                    <option value="" disabled selected>Seleccionar categoría existente</option>
+                    <!-- Se cargarán dinámicamente -->
+                </select>
+                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría" />
 
-            <label>Marca:</label>
-            <select id="marcaEditar" name="marca" required>
-                <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
-            </select>
-            <input type="text" id="nuevaMarcaEditar"  placeholder="Nueva Marca">
-            <br>
 
-            <label>Precio:</label>
-            <input type="number" id="precioEditar" name="precio" step="0.01" required>
+                <label>Marca:</label>
+                <select id="marcaEditar" name="marca" required>
+                    <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
+                </select>
+                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca">
+                <br>
 
-            <label>Precio Mayorista:</label>
-            <input type="number" id="preciomayoristaEditar" name="precioMayorista" step="0.01" required>
+                <label>Precio:</label>
+                <input type="number" id="precioEditar" name="precio" step="0.01" required>
 
-            <label>Imagen Actual:</label>
-            <div>
-                <img id="imagenActual" src="" alt="Imagen Actual" style="width: 150px;">
-            </div>
+                <label>Precio Mayorista:</label>
+                <input type="number" id="preciomayoristaEditar" name="precioMayorista" step="0.01" required>
 
-            <!-- Input oculto para la URL actual -->
-            <input type="hidden" id="imagenUrlActual" name="imagenUrlActual">
+                <label>Imagen Actual:</label>
+                <div>
+                    <img id="imagenActual" src="" alt="Imagen Actual" style="width: 150px;">
+                </div>
 
-            <label>Subir Nueva Imagen (Opcional):</label>
-            <input type="file" id="imagenEditar" name="imagen" accept="image/*">
+                <!-- Input oculto para la URL actual -->
+                <input type="hidden" id="imagenUrlActual" name="imagenUrlActual">
 
-            <label>Habilitado:</label>
-            <select id="habilitadoEditar" name="habilitado">
-                <option value="1">Sí</option>
-                <option value="0">No</option>
-            </select>
+                <label>Subir Nueva Imagen (Opcional):</label>
+                <input type="file" id="imagenEditar" name="imagen" accept="image/*">
 
-            <button type="submit">Guardar Cambios</button>
-        </form>
+                <label>Habilitado:</label>
+                <select id="habilitadoEditar" name="habilitado">
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
     </div>
-</div>
 
 
-<!-- Modal Confirmar Eliminación -->
-<div id="modalEliminar" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="cerrarModal('modalEliminar')">&times;</span>
-        <h2>¿Estás seguro?</h2>
-        <p>¿Quieres eliminar este producto?</p>
-        <button id="confirmarEliminar">Eliminar</button>
-        <button onclick="cerrarModal('modalEliminar')">Cancelar</button>
+    <!-- Modal Confirmar Eliminación -->
+    <div id="modalEliminar" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('modalEliminar')">&times;</span>
+            <h2>¿Estás seguro?</h2>
+            <p>¿Quieres eliminar este producto?</p>
+            <button id="confirmarEliminar">Eliminar</button>
+            <button onclick="cerrarModal('modalEliminar')">Cancelar</button>
+        </div>
     </div>
-</div>
 
-    
+
 
 
 </body>
+
 </html>
 <script>
-        if (!sessionStorage.getItem("loggedIn")) {
-            window.location.href = "login.php"; // Si no está logueado, redirigir a login
-        }
-              document.getElementById("logout-button").addEventListener("click", function () {
-          sessionStorage.removeItem("loggedIn"); // Elimina la sesión
-          window.location.href = "login.php"; // Redirige al login
-      });
-    </script>
+    if (!sessionStorage.getItem("loggedIn")) {
+        window.location.href = "login.php"; // Si no está logueado, redirigir a login
+    }
+    document.getElementById("logout-button").addEventListener("click", function () {
+        sessionStorage.removeItem("loggedIn"); // Elimina la sesión
+        window.location.href = "login.php"; // Redirige al login
+    });
+</script>

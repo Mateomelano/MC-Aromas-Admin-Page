@@ -44,12 +44,32 @@ $(document).ready(function () {
 
   cargarMarcas();
 
+  // Función para cargar categorias desde el servidor y llenar los selects
+  function cargarCategorias() {
+    $.ajax({
+      url: "src/php/get_categorias.php",
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        let options = data
+          .map((cat) => `<option value="${cat}">${cat}</option>`)
+          .join("");
+        $("#categoriaAgregar").append(options);
+        $("#categoriaEditar").append(options); // sumamos edición
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al cargar categorías: ", error);
+      },
+    });
+  }
+
+  cargarCategorias();
+
   // Agregar Producto
   const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dzfzqzdcu/upload";
   const cloudinaryPreset = "McaromasPics"; // Reemplaza con tu preset de Cloudinary
 
   $("#formAgregar").submit(async function (e) {
-    debugger
     e.preventDefault();
     let form = document.getElementById("formAgregar");
     let formData = new FormData(form);
@@ -57,24 +77,33 @@ $(document).ready(function () {
     let precioMayorista = $("#precioMayoristaAgregar").val();
     formData.append("precioMayorista", precioMayorista);
 
-    // Obtener el valor del select y del input
+    // Marcas
     let marcaSeleccionada = $("#marcaAgregar").val();
     let nuevaMarca = $("#nuevaMarcaAgregar").val().trim();
 
     if (nuevaMarca) {
-      // Si el usuario escribe una marca nueva
       formData.append("marca", nuevaMarca);
     } else if (marcaSeleccionada) {
-      // Si selecciona una marca existente
       formData.append("marca", marcaSeleccionada);
     } else {
-      // Si no se elige ni se escribe nada
       alert("Por favor, selecciona o ingresa una marca.");
       return;
     }
 
-    let imagen = document.getElementById("imagenAgregar").files[0];
+    // Categorías
+    let categoriaSeleccionada = $("#categoriaAgregar").val();
+    let nuevaCategoria = $("#nuevaCategoriaAgregar").val().trim();
 
+    if (nuevaCategoria) {
+      formData.append("categoria", nuevaCategoria);
+    } else if (categoriaSeleccionada) {
+      formData.append("categoria", categoriaSeleccionada);
+    } else {
+      alert("Por favor, selecciona o ingresa una categoría.");
+      return;
+    }
+
+    let imagen = document.getElementById("imagenAgregar").files[0];
     if (imagen) {
       let imageUrl = await subirImagenACloudinary(imagen);
       if (imageUrl) {
@@ -169,20 +198,19 @@ $(document).ready(function () {
   });
 
   // Editar producto
+  // Editar producto
   $("#formEditar").submit(async function (e) {
-    debugger;
     e.preventDefault();
     let formData = new FormData();
 
     formData.append("id", $("#idEditar").val());
     formData.append("nombre", $("#nombreEditar").val());
     formData.append("descripcion", $("#descripcionEditar").val());
-    formData.append("categoria", $("#categoriaEditar").val());
     formData.append("precio", $("#precioEditar").val());
     formData.append("preciomayorista", $("#preciomayoristaEditar").val());
     formData.append("habilitado", $("#habilitadoEditar").val());
-    console.log(formData);
 
+    // --- Marca (nueva o seleccionada)
     let marcaSeleccionada = $("#marcaEditar").val();
     let nuevaMarca = $("#nuevaMarcaEditar").val().trim();
 
@@ -190,24 +218,40 @@ $(document).ready(function () {
       formData.set("marca", nuevaMarca);
     } else if (marcaSeleccionada) {
       formData.set("marca", marcaSeleccionada);
+    } else {
+      alert("Por favor, selecciona o ingresa una marca.");
+      return;
     }
 
-    // Obtener la URL de la imagen actual
-    let imagenActual = $("#imagenUrlActual").val();
-    formData.append("imagenUrlActual", imagenActual);
+    // --- Categoría (nueva o seleccionada)
+    let categoriaSeleccionada = $("#categoriaEditar").val();
+    let nuevaCategoria = $("#nuevaCategoriaEditar").val().trim();
 
+    if (nuevaCategoria) {
+      formData.set("categoria", nuevaCategoria);
+    } else if (categoriaSeleccionada) {
+      formData.set("categoria", categoriaSeleccionada);
+    } else {
+      alert("Por favor, selecciona o ingresa una categoría.");
+      return;
+    }
+
+    // --- Imagen
+    let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
     let imagen = document.getElementById("imagenEditar").files[0];
 
     if (imagen) {
       // Si se sube una nueva imagen
       let imageUrl = await subirImagenACloudinary(imagen);
       if (imageUrl) {
-        formData.set("imagenUrl", imageUrl); // Reemplazar con la nueva URL
+        formData.set("imagenUrl", imageUrl); // Reemplazar con la nueva
       }
     } else {
-      formData.append("imagenUrl", imagenActual); // Mantener la URL anterior si no se sube nada nuevo
+      // Mantener la imagen anterior
+      formData.append("imagenUrl", imagenActual);
     }
 
+    // --- Enviar solicitud AJAX
     $.ajax({
       url: "src/php/editar_producto.php",
       type: "POST",
@@ -216,6 +260,8 @@ $(document).ready(function () {
       contentType: false,
     })
       .done(function (data) {
+        console.log("✅ Producto editado:", data);
+        alert("Producto editado correctamente");
         location.reload();
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
@@ -251,18 +297,19 @@ $(document).ready(function () {
   // filtro precio
 
   $(".orden-icon").click(function () {
-    let columna = $(this).attr("id") === "ordenar-precio" ? "precio" : "preciomayorista"; // Identifica qué columna ordenar
+    let columna =
+      $(this).attr("id") === "ordenar-precio" ? "precio" : "preciomayorista"; // Identifica qué columna ordenar
     let ordenActual = $(this).data("order");
 
     if (!ordenActual || ordenActual === "null") {
-        ordenActual = "asc"; // 🔼 Ascendente
-        $(this).data("order", "asc").text("🔽");
+      ordenActual = "asc"; // 🔼 Ascendente
+      $(this).data("order", "asc").text("🔽");
     } else if (ordenActual === "asc") {
-        ordenActual = "desc"; // 🔽 Descendente
-        $(this).data("order", "desc").text("🔼");
+      ordenActual = "desc"; // 🔽 Descendente
+      $(this).data("order", "desc").text("🔼");
     } else {
-        ordenActual = null; // Sin orden
-        $(this).data("order", "null").text("🔼🔽");
+      ordenActual = null; // Sin orden
+      $(this).data("order", "null").text("🔼🔽");
     }
 
     let query = $("#search-input").val();
@@ -270,68 +317,86 @@ $(document).ready(function () {
 
     // ✅ Pasamos también la columna a ordenar
     cargarProductos(query, habilitado, ordenActual, columna);
-});
+  });
 
-function cargarProductos(query = "", habilitadoFiltro = null, orden = null, columna = "precio") {
-  debugger;
-  let data = { q: query };
-  if (habilitadoFiltro !== null) {
+  function cargarProductos(
+    query = "",
+    habilitadoFiltro = null,
+    orden = null,
+    columna = "precio"
+  ) {
+    debugger;
+    let data = { q: query };
+    if (habilitadoFiltro !== null) {
       data.habilitado = habilitadoFiltro;
-  }
-  if (orden) {
+    }
+    if (orden) {
       data.orden = orden;
-  }
-  if (columna) {
+    }
+    if (columna) {
       data.columna = columna;
-  }
+    }
 
-  $.ajax({
+    $.ajax({
       url: "src/php/get_productos.php",
       type: "GET",
       data: data,
       dataType: "json",
       success: function (data) {
-          let tableBody = $("#product-table-body");
-          tableBody.empty();
+        let tableBody = $("#product-table-body");
+        tableBody.empty();
 
-          if (data.length > 0) {
-              data.forEach(function (producto) {
-                  let checked = producto.habilitado == 1 ? "checked" : "";
-                  let row = `<tr>
+        if (data.length > 0) {
+          data.forEach(function (producto) {
+            let checked = producto.habilitado == 1 ? "checked" : "";
+            let row = `<tr>
                               <td>${producto.id}</td>
                               <td>${producto.nombre}</td>
                               <td>${producto.descripcion}</td>
                               <td>${producto.categoria}</td>
                               <td>${producto.marca}</td>
-                              <td>$${parseFloat(producto.precio).toFixed(2)}</td>
-                              <td>$${parseFloat(producto.preciomayorista).toFixed(2)}</td>
+                              <td>$${parseFloat(producto.precio).toFixed(
+                                2
+                              )}</td>
+                              <td>$${parseFloat(
+                                producto.preciomayorista
+                              ).toFixed(2)}</td>
                               <td>
-                                  <input type="checkbox" class="toggle-habilitado" data-id="${producto.id}" ${checked}>
+                                  <input type="checkbox" class="toggle-habilitado" data-id="${
+                                    producto.id
+                                  }" ${checked}>
                               </td>
                               <td>
-                                  <img src="${producto.imagen}" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
+                                  <img src="${
+                                    producto.imagen
+                                  }" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
                               </td>
                               <td>
-                                  <button class='edit-btn' data-id='${producto.id}'>✏️</button>
-                                  <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
+                                  <button class='edit-btn' data-id='${
+                                    producto.id
+                                  }'>✏️</button>
+                                  <button class='delete-btn' data-id='${
+                                    producto.id
+                                  }'>🗑️</button>
                               </td>
                           </tr>`;
-                  tableBody.append(row);
-              });
-          } else {
-              tableBody.append("<tr><td colspan='9'>No hay productos disponibles</td></tr>");
-          }
+            tableBody.append(row);
+          });
+        } else {
+          tableBody.append(
+            "<tr><td colspan='9'>No hay productos disponibles</td></tr>"
+          );
+        }
       },
       error: function () {
-          $("#product-table-body").append("<tr><td colspan='9'>Error al cargar los productos</td></tr>");
-      }
-  });
-}
-
-
+        $("#product-table-body").append(
+          "<tr><td colspan='9'>Error al cargar los productos</td></tr>"
+        );
+      },
+    });
+  }
 
   // 🟢 Estado inicial: intermedio (todos los productos)
-  debugger;
   let filtroHabilitado = null;
   let filtroCheckbox = $("#filter-habilitado");
   filtroCheckbox.data("state", filtroHabilitado);
@@ -346,51 +411,58 @@ function cargarProductos(query = "", habilitadoFiltro = null, orden = null, colu
     cargarProductos(query, filtroCheckbox.data("state"));
   });
 
-// 🟢 Ciclo de estados para el filtro de habilitados
-$("#filter-habilitado").on("click", function () {
-  let currentState = $(this).data("state");
+  // 🟢 Ciclo de estados para el filtro de habilitados
+  $("#filter-habilitado").on("click", function () {
+    let currentState = $(this).data("state");
 
-  if (currentState === null || currentState === undefined) {
-      $(this).data("state", 1).prop("checked", true).prop("indeterminate", false);
-  } else if (currentState === 1) {
-      $(this).data("state", 0).prop("checked", false).prop("indeterminate", false);
-  } else {
-      $(this).data("state", null).prop("checked", false).prop("indeterminate", true);
-  }
+    if (currentState === null || currentState === undefined) {
+      $(this)
+        .data("state", 1)
+        .prop("checked", true)
+        .prop("indeterminate", false);
+    } else if (currentState === 1) {
+      $(this)
+        .data("state", 0)
+        .prop("checked", false)
+        .prop("indeterminate", false);
+    } else {
+      $(this)
+        .data("state", null)
+        .prop("checked", false)
+        .prop("indeterminate", true);
+    }
 
-  let query = $("#search-input").val();
-  let filtroEstado = $(this).data("state");
-  cargarProductos(query, filtroEstado);
-});
-
+    let query = $("#search-input").val();
+    let filtroEstado = $(this).data("state");
+    cargarProductos(query, filtroEstado);
+  });
 
   // 🔄 Controlar los checkboxes individuales para cada producto
-$(document).on("change", ".toggle-habilitado", function () {
-  debugger
-  let productId = $(this).data("id");
-  let nuevoEstado = $(this).is(":checked") ? 1 : 0;
+  $(document).on("change", ".toggle-habilitado", function () {
+    debugger;
+    let productId = $(this).data("id");
+    let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
-  $.ajax({
+    $.ajax({
       url: "src/php/editar_producto.php",
       type: "POST",
       data: { id: productId, habilitado: nuevoEstado },
       dataType: "json",
       success: function (response) {
-          if (response.success) {
-              console.log("Producto actualizado correctamente.");
-              let query = $("#search-input").val();
-              let filtroEstado = $("#filter-habilitado").data("state");
-              cargarProductos(query, filtroEstado); // Refrescar productos después del cambio
-          } else {
-              console.error("Error al actualizar producto:", response.error);
-          }
+        if (response.success) {
+          console.log("Producto actualizado correctamente.");
+          let query = $("#search-input").val();
+          let filtroEstado = $("#filter-habilitado").data("state");
+          cargarProductos(query, filtroEstado); // Refrescar productos después del cambio
+        } else {
+          console.error("Error al actualizar producto:", response.error);
+        }
       },
       error: function () {
-          console.error("Error al intentar actualizar el producto.");
-      }
+        console.error("Error al intentar actualizar el producto.");
+      },
+    });
   });
-});
-
 
   //Funcion Exportar Excel
 
@@ -450,5 +522,4 @@ $(document).on("change", ".toggle-habilitado", function () {
     // Descargar el archivo
     XLSX.writeFile(wb, "productos.xlsx");
   }
-  
 });
