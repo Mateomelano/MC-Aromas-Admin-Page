@@ -32,6 +32,7 @@
                 <li><a href="productos.php">Productos</a></li>
                 <li><a href="banners.php">Banners</a></li>
                 <li><a href="pedidos.php">Pedidos</a></li>
+                <li><a href="ventas.php">Ventas</a></li>
                 <button id="logout-button">Cerrar Sesión</button>
             </ul>
         </nav>

@@ -1013,6 +1013,7 @@ button:active {
   border-radius: 10px; /* Bordes redondeados */
   cursor: pointer;
   display: block;
+  font-size: 10px !important;
   width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -1026,4 +1027,166 @@ button:active {
 
 #logout-button:active {
   transform: scale(0.95);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1400px;
+  margin-left: 350px;
+}
+
+.checkbox-entregado {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+#productos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 5rem 1rem;
+}
+#productos h1 {
+  font-size: 2.8rem;
+  font-weight: 500;
+}
+#productos p {
+  color: #333;
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+h1, h2 {
+  color: #db3434;
+}
+
+input[type=text] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  min-width: 700px;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+
+tbody {
+  text-align: center;
+}
+
+thead {
+  background: #db3434;
+  color: white;
+}
+
+td, th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+tbody tr:hover {
+  background: #f1f1f1;
+}
+
+.btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  margin: 30px;
+}
+.btn:hover {
+  cursor: pointer;
+  background-color: #ce1e30;
+  transform: scale(1.05);
+}
+
+.btn-excel {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  margin: 30px;
+}
+.btn-excel:hover {
+  cursor: pointer;
+  background-color: #ce1e30;
+  transform: scale(1.05);
+}
+
+button {
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  background: none;
+  margin: 0 5px;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.edit-btn, .delete-btn {
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  background: none;
+  margin: 0 5px;
+}
+
+.edit-btn {
+  color: #007bff;
+}
+
+.delete-btn {
+  color: #dc3545;
+}
+
+.orden-icon {
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+  font-size: 20px;
+}
+
+#filter-habilitado {
+  font-size: 50px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1700px) {
+  .content {
+    margin-left: 250px;
+  }
 }/*# sourceMappingURL=app.css.map */
