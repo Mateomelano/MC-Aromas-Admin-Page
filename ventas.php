@@ -16,9 +16,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet" />
-    <!-- PDF-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.plugin.standard_fonts.min.js"></script>
+    <!-- CHART.JS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 </head>
 
@@ -52,14 +52,43 @@
                         <th>Total</th>
                         <th>Total Mayorista</th>
                         <th>Entregado</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
 
         </section>
-    </div>
 
+        <section class="kpis-ventas" style="display: flex; justify-content: center; gap: 20px; margin: 40px 0;">
+            <div class="kpi-card" id="kpi-total-vendido"
+                style="flex: 1; background: #f5f5f5; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3>Total Vendido</h3>
+                <p style="font-size: 24px; font-weight: bold;">$0</p>
+            </div>
+            <div class="kpi-card" id="kpi-total-productos"
+                style="flex: 1; background: #f5f5f5; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3>Productos Vendidos</h3>
+                <p style="font-size: 24px; font-weight: bold;">0</p>
+            </div>
+            <div class="kpi-card" id="kpi-producto-top"
+                style="flex: 1; background: #f5f5f5; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3>Producto más vendido</h3>
+                <p style="font-size: 20px; font-weight: bold;">-</p>
+            </div>
+        </section>
+
+
+        <section class="resumen-ventas" style="margin-bottom: 40px;">
+            <h2>📊 Resumen de Ventas</h2>
+            <div style="max-width: 800px; margin: 20px auto;">
+                <canvas id="grafico-productos"></canvas>
+            </div>
+            <div style="max-width: 800px; margin: 40px auto 0;">
+                <canvas id="grafico-evolucion"></canvas>
+            </div>
+        </section>
+    </div>
 
 
 </body>
