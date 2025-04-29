@@ -98,7 +98,7 @@
                     <option value="" disabled selected>Seleccionar categoría existente</option>
                     <!-- Aquí se van a cargar las categorías desde la base de datos -->
                 </select>
-                <input type="text" id="nuevaCategoriaAgregar" placeholder="o escribe una nueva categoría" required />
+                <input type="text" id="nuevaCategoriaAgregar" placeholder="o escribe una nueva categoría" />
 
                 <label>Marca:</label>
                 <select id="marcaAgregar" name="marcaSelect">
@@ -146,14 +146,14 @@
                     <option value="" disabled selected>Seleccionar categoría existente</option>
                     <!-- Se cargarán dinámicamente -->
                 </select>
-                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría" required />
+                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría"  />
 
 
                 <label>Marca:</label>
                 <select id="marcaEditar" name="marca" required>
                     <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
                 </select>
-                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca" required>
+                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca" >
                 <br>
 
                 <label>Precio:</label>
