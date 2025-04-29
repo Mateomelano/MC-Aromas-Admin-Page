@@ -49,7 +49,7 @@ $(document).ready(function () {
   const cloudinaryPreset = "McaromasPics"; // Reemplaza con tu preset de Cloudinary
 
   $("#formAgregar").submit(async function (e) {
-    debugger
+    
     e.preventDefault();
     let form = document.getElementById("formAgregar");
     let formData = new FormData(form);
@@ -90,7 +90,6 @@ $(document).ready(function () {
       contentType: false,
     })
       .done(function (data) {
-        console.log("✅ Producto agregado:", data);
         alert("Producto agregado correctamente");
         location.reload();
       })
@@ -125,11 +124,8 @@ $(document).ready(function () {
 
   // Abrir modal de edición con datos del producto
   $(document).on("click", ".edit-btn", function () {
-    debugger;
+
     let row = $(this).closest("tr");
-
-    console.log("Fila seleccionada:", row.html()); // Ver qué HTML tiene la fila seleccionada
-
     $("#idEditar").val(row.find("td:eq(0)").text().trim()); // ID
     $("#nombreEditar").val(row.find("td:eq(1)").text().trim()); // Nombre
 
@@ -170,7 +166,7 @@ $(document).ready(function () {
 
   // Editar producto
   $("#formEditar").submit(async function (e) {
-    debugger;
+    
     e.preventDefault();
     let formData = new FormData();
 
@@ -181,7 +177,7 @@ $(document).ready(function () {
     formData.append("precio", $("#precioEditar").val());
     formData.append("preciomayorista", $("#preciomayoristaEditar").val());
     formData.append("habilitado", $("#habilitadoEditar").val());
-    console.log(formData);
+
 
     let marcaSeleccionada = $("#marcaEditar").val();
     let nuevaMarca = $("#nuevaMarcaEditar").val().trim();
@@ -273,7 +269,6 @@ $(document).ready(function () {
 });
 
 function cargarProductos(query = "", habilitadoFiltro = null, orden = null, columna = "precio") {
-  debugger;
   let data = { q: query };
   if (habilitadoFiltro !== null) {
       data.habilitado = habilitadoFiltro;
@@ -331,7 +326,7 @@ function cargarProductos(query = "", habilitadoFiltro = null, orden = null, colu
 
 
   // 🟢 Estado inicial: intermedio (todos los productos)
-  debugger;
+
   let filtroHabilitado = null;
   let filtroCheckbox = $("#filter-habilitado");
   filtroCheckbox.data("state", filtroHabilitado);
@@ -366,7 +361,7 @@ $("#filter-habilitado").on("click", function () {
 
   // 🔄 Controlar los checkboxes individuales para cada producto
 $(document).on("change", ".toggle-habilitado", function () {
-  debugger
+  
   let productId = $(this).data("id");
   let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
@@ -377,7 +372,6 @@ $(document).on("change", ".toggle-habilitado", function () {
       dataType: "json",
       success: function (response) {
           if (response.success) {
-              console.log("Producto actualizado correctamente.");
               let query = $("#search-input").val();
               let filtroEstado = $("#filter-habilitado").data("state");
               cargarProductos(query, filtroEstado); // Refrescar productos después del cambio

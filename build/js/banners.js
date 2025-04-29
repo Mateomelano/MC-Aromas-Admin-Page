@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarBanners();
     
     document.getElementById("uploadBanner").addEventListener("change", function (event) {
-        debugger
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append("imagen", file);
@@ -23,13 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function cargarBanners() {
-    debugger
     fetch("src/php/get_banners.php")
       .then((response) => response.json())
 
       .then((data) => {
-        debugger
-        console.log(data);
         const bannerContainer = document.getElementById("bannerContainer");
         bannerContainer.innerHTML = "";
   
@@ -46,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function eliminarBanner(id, url) {
-    debugger
     if (!confirm("¿Estás seguro de que deseas eliminar este banner?")) return;
   
     fetch("src/php/eliminar_banner.php", {
