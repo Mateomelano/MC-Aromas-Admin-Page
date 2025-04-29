@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>MC Aromas - Productos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="icon" type="image/jpeg"
         href="https://res.cloudinary.com/dzfzqzdcu/image/upload/v1743554383/ari6vwivcy0ndoeqpmmw.jpg">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importar jQuery -->
@@ -96,14 +98,14 @@
                     <option value="" disabled selected>Seleccionar categoría existente</option>
                     <!-- Aquí se van a cargar las categorías desde la base de datos -->
                 </select>
-                <input type="text" id="nuevaCategoriaAgregar" placeholder="o escribe una nueva categoría" />
+                <input type="text" id="nuevaCategoriaAgregar" placeholder="o escribe una nueva categoría" required />
 
                 <label>Marca:</label>
                 <select id="marcaAgregar" name="marcaSelect">
                     <option value="" disabled selected>Seleccionar marca existente</option>
                     <!-- Aquí se van a cargar las marcas desde la base de datos -->
                 </select>
-                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca">
+                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca" required>
 
                 <label>Precio:</label>
                 <input type="number" id="precioAgregar" name="precio" step="0.01" required>
@@ -144,14 +146,14 @@
                     <option value="" disabled selected>Seleccionar categoría existente</option>
                     <!-- Se cargarán dinámicamente -->
                 </select>
-                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría" />
+                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría" required />
 
 
                 <label>Marca:</label>
                 <select id="marcaEditar" name="marca" required>
                     <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
                 </select>
-                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca">
+                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca" required>
                 <br>
 
                 <label>Precio:</label>
