@@ -105,7 +105,7 @@
                     <option value="" disabled selected>Seleccionar marca existente</option>
                     <!-- Aquí se van a cargar las marcas desde la base de datos -->
                 </select>
-                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca" required>
+                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca" >
 
                 <label>Precio:</label>
                 <input type="number" id="precioAgregar" name="precio" step="0.01" required>
