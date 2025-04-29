@@ -1,6 +1,7 @@
 import { src, dest, watch, series } from 'gulp'
 import * as dartSass from 'sass'
 import gulpSass from 'gulp-sass'
+import cleanCSS from 'gulp-clean-css'
 
 const sass = gulpSass(dartSass)
 
@@ -11,10 +12,11 @@ export function js( done ) {
     done()
 }
 
-export function css( done ) {
-    src('src/scss/app.scss', {sourcemaps: true})
-        .pipe( sass().on('error', sass.logError) )
-        .pipe( dest('build/css', {sourcemaps: '.'}) )
+export function css(done) {
+    src('src/scss/app.scss', { sourcemaps: true })
+        .pipe(sass().on('error', sass.logError))
+        .pipe(cleanCSS({ compatibility: 'ie8' })) // ← minifica CSS
+        .pipe(dest('build/css', { sourcemaps: '.' }))
 
     done()
 }
