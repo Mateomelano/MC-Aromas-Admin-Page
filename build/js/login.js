@@ -2,7 +2,7 @@ function login() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     
-    if (username === "1" && password === "1") {
+    if (username === "merceriachela" && password === "pabloagos") {
         sessionStorage.setItem("loggedIn", "true");
         window.location.href = "index.php"; // Redirige al panel de administración
     } else {
