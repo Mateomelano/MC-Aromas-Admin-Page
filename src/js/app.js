@@ -111,13 +111,13 @@ $(document).ready(function () {
       return;
     }
 
-    let imagen = document.getElementById("imagenAgregar").files[0];
-    if (imagen) {
-      let imageUrl = await subirImagenACloudinary(imagen);
-      if (imageUrl) {
-        formData.append("imagenUrl", imageUrl);
-      }
-    }
+    //let imagen = document.getElementById("imagenAgregar").files[0];
+    //if (imagen) {
+    //  let imageUrl = await subirImagenACloudinary(imagen);
+     // if (imageUrl) {
+      //  formData.append("imagenUrl", imageUrl);
+      //}
+    //}
 
     $.ajax({
       url: "src/php/agregar_producto.php",
@@ -209,10 +209,12 @@ $(document).ready(function () {
 
   // Editar producto
   // Editar producto
+  debugger
   $("#formEditar").submit(async function (e) {
+    debugger
     e.preventDefault();
     let formData = new FormData();
-
+    debugger
     formData.append("id", $("#idEditar").val());
     formData.append("nombre", $("#nombreEditar").val());
     formData.append("descripcion", $("#descripcionEditar").val());
@@ -255,18 +257,16 @@ $(document).ready(function () {
     }
 
     // --- Imagen
+  // --- Imagen
     let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
     let imagen = document.getElementById("imagenEditar").files[0];
 
     if (imagen) {
-      // Si se sube una nueva imagen
-      let imageUrl = await subirImagenACloudinary(imagen);
-      if (imageUrl) {
-        formData.set("imagenUrl", imageUrl); // Reemplazar con la nueva
-      }
+      // Si se sube una nueva imagen, la agregamos al FormData
+      formData.append("imagen", imagen);
     } else {
       // Mantener la imagen anterior
-      formData.append("imagenUrl", imagenActual);
+      formData.append("imagenUrlActual", imagenActual);
     }
 
     // --- Enviar solicitud AJAX
@@ -435,7 +435,9 @@ $(document).ready(function () {
   });
 
   // 🟢 Ciclo de estados para el filtro de habilitados
+  debugger
   $("#filter-habilitado").on("click", function () {
+    debugger
     let currentState = $(this).data("state");
 
     if (currentState === null || currentState === undefined) {
@@ -466,7 +468,7 @@ $(document).ready(function () {
     let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
     $.ajax({
-      url: "src/php/editar_producto.php",
+      url: "src/php/actualizar_estado.php",
       type: "POST",
       data: { id: productId, habilitado: nuevoEstado },
       dataType: "json",

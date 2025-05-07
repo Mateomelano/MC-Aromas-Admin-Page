@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
+  header("Location: login.php");
+  exit;
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -35,7 +42,10 @@
                 <li><a href="banners.php">Banners</a></li>
                 <li><a href="pedidos.php">Pedidos</a></li>
                 <li><a href="ventas.php">Ventas</a></li>
-                <button id="logout-button">Cerrar Sesión</button>
+                <li><a href="src/php/logout.php">
+                        <button id="logout-button">Cerrar Sesión</button>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
@@ -105,7 +115,7 @@
                     <option value="" disabled selected>Seleccionar marca existente</option>
                     <!-- Aquí se van a cargar las marcas desde la base de datos -->
                 </select>
-                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca" >
+                <input type="text" id="nuevaMarcaAgregar" name="nuevaMarca" placeholder="O escribe una nueva marca">
 
                 <label>Precio:</label>
                 <input type="number" id="precioAgregar" name="precio" step="0.01" required>
@@ -146,14 +156,14 @@
                     <option value="" disabled selected>Seleccionar categoría existente</option>
                     <!-- Se cargarán dinámicamente -->
                 </select>
-                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría"  />
+                <input type="text" id="nuevaCategoriaEditar" placeholder="o escribe una nueva categoría" />
 
 
                 <label>Marca:</label>
                 <select id="marcaEditar" name="marca" required>
                     <option value="" disabled selected>Seleccionar o agregar nueva marca</option>
                 </select>
-                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca" >
+                <input type="text" id="nuevaMarcaEditar" placeholder="Nueva Marca">
                 <br>
 
                 <label>Precio:</label>
@@ -202,12 +212,3 @@
 </body>
 
 </html>
-<script>
-    if (!sessionStorage.getItem("loggedIn")) {
-        window.location.href = "login.php"; // Si no está logueado, redirigir a login
-    }
-    document.getElementById("logout-button").addEventListener("click", function () {
-        sessionStorage.removeItem("loggedIn"); // Elimina la sesión
-        window.location.href = "login.php"; // Redirige al login
-    });
-</script>

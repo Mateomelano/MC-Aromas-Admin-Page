@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -35,7 +42,10 @@
                 <li><a href="banners.php">Banners</a></li>
                 <li><a href="pedidos.php">Pedidos</a></li>
                 <li><a href="ventas.php">Ventas</a></li>
-                <button id="logout-button">Cerrar Sesión</button>
+                <li><a href="src/php/logout.php">
+                        <button id="logout-button">Cerrar Sesión</button>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
@@ -94,12 +104,3 @@
 </body>
 
 </html>
-<script>
-    if (!sessionStorage.getItem("loggedIn")) {
-        window.location.href = "login.php"; // Si no está logueado, redirigir a login
-    }
-    document.getElementById("logout-button").addEventListener("click", function () {
-        sessionStorage.removeItem("loggedIn"); // Elimina la sesión
-        window.location.href = "login.php"; // Redirige al login
-    });
-</script>

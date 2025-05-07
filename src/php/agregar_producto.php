@@ -10,8 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $preciomayorista = isset($_POST['precioMayorista']) ? floatval($_POST['precioMayorista']) : 0;
     $habilitado = $_POST['habilitado'];
 
-    // URL de la imagen subida a Cloudinary
-    $rutaImagen = isset($_POST['imagenUrl']) ? $_POST['imagenUrl'] : null;
+    // Subida de imagen al servidor
+    $rutaImagen = null;
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
+        $nombreArchivo = uniqid() . "_" . basename($_FILES["imagen"]["name"]);
+        $directorioDestino = "../../uploads/" . $nombreArchivo;
+
+        if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $directorioDestino)) {
+            // Guardar la URL completa en la base de datos
+            $rutaImagen = "https://purple-sheep-451734.hostingersite.com/uploads/" . $nombreArchivo;
+
+        }
+    }
 
     $sql = "INSERT INTO productos (nombre, descripcion, categoria, marca, precio, preciomayorista, habilitado, imagen) 
             VALUES ('$nombre', '$descripcion', '$categoria', '$marca', '$precio' , '$preciomayorista', '$habilitado', '$rutaImagen')";

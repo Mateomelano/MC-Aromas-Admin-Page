@@ -1,9 +1,9 @@
 <?php
 
-$host = "localhost"; 
-$user = "root"; // Usuario de MySQL (por defecto en XAMPP)
-$password = "mateo"; // Deja vacío si no configuraste una contraseña
-$dbname = "mc_aromas"; 
+$host = "185.211.7.154"; // o el host específico que te da Hostinger (ej: `srv123.main-hosting.eu`)
+$user = "u617835785_root"; // tu usuario exacto
+$password = "Merceriachela1"; // tu contraseña real
+$dbname = "u617835785_mc_aromas";
 
 $conn = new mysqli($host, $user, $password, $dbname);
 
