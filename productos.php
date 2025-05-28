@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
-  header("Location: login.php");
-  exit;
+    header("Location: login.php");
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -53,12 +53,27 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
     <main class="content">
         <section id="productos" class="productos-section">
             <h2>Lista de Productos</h2>
-            <div class="filter-container">
-                <button id="add-product-btn" class="btn">➕ Agregar Producto</button>
+
+            <div class="buscador-productos">
+                <p class="titulo-buscador">Buscador de Productos</p>
                 <input type="text" id="search-input" placeholder="Buscar...🔍">
-                <button id="export-excel-btn" class="btn-excel">📊 Exportar Excel</button>
+
+                <div class="botones-acciones">
+                    <button id="add-product-btn" class="btn">➕ Agregar Producto</button>
+
+                    <button id="modo-mantenimiento-btn" class="btn">
+                        <label>
+                            <input type="checkbox" id="mantenimiento-toggle">
+                            🔧 Modo Mantenimiento
+                        </label>
+                    </button>
+
+                    <button id="export-excel-btn" class="btn-excel">📊 Exportar Excel</button>
+                </div>
 
             </div>
+
+
             <table>
                 <thead>
                     <tr>

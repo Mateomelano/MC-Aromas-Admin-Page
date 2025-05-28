@@ -1,4 +1,56 @@
 $(document).ready(function () {
+
+   // BOTON MANTENIMIENTO
+const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
+
+  // 1. Obtener el estado actual del mantenimiento
+  fetch("src/php/obtener_estado_mantenimiento.php")
+    .then(res => res.json())
+    .then(data => {
+      if (data && toggleMantenimiento) {
+        toggleMantenimiento.checked = data.activado == 1;
+      }
+    })
+    .catch(err => console.error("Error al obtener estado:", err));
+
+  // 2. Escuchar cambios y actualizar
+  toggleMantenimiento.addEventListener("change", () => {
+    fetch("src/php/actualizar_estado_mantenimiento.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ activado: toggleMantenimiento.checked ? 1 : 0 })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Modo mantenimiento actualizado',
+            text: 'El estado se cambió correctamente.',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo actualizar el estado.',
+          });
+        }
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al conectar con el servidor.',
+        });
+      });
+  });
+
+
+
   // Mostrar el modal al hacer clic en "Agregar Producto"
   $("#add-product-btn").click(function () {
     abrirModal("modalAgregar");
@@ -111,13 +163,13 @@ $(document).ready(function () {
       return;
     }
 
-    let imagen = document.getElementById("imagenAgregar").files[0];
-    if (imagen) {
-      let imageUrl = await subirImagenACloudinary(imagen);
-      if (imageUrl) {
-        formData.append("imagenUrl", imageUrl);
-      }
-    }
+    //let imagen = document.getElementById("imagenAgregar").files[0];
+    //if (imagen) {
+    //  let imageUrl = await subirImagenACloudinary(imagen);
+    //  if (imageUrl) {
+    //    formData.append("imagenUrl", imageUrl);
+    //  }
+    //}
 
     $.ajax({
       url: "src/php/agregar_producto.php",
@@ -210,6 +262,7 @@ $(document).ready(function () {
   // Editar producto
   // Editar producto
   $("#formEditar").submit(async function (e) {
+    debugger;
     e.preventDefault();
     let formData = new FormData();
 
@@ -255,19 +308,17 @@ $(document).ready(function () {
     }
 
     // --- Imagen
-    let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
-    let imagen = document.getElementById("imagenEditar").files[0];
-
-    if (imagen) {
-      // Si se sube una nueva imagen
-      let imageUrl = await subirImagenACloudinary(imagen);
-      if (imageUrl) {
-        formData.set("imagenUrl", imageUrl); // Reemplazar con la nueva
+      // --- Imagen
+      let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
+      let imagen = document.getElementById("imagenEditar").files[0];
+    
+      if (imagen) {
+        // Si se sube una nueva imagen, la agregamos al FormData
+        formData.append("imagen", imagen);
+      } else {
+        // Mantener la imagen anterior
+        formData.append("imagenUrlActual", imagenActual);
       }
-    } else {
-      // Mantener la imagen anterior
-      formData.append("imagenUrl", imagenActual);
-    }
 
     // --- Enviar solicitud AJAX
     $.ajax({
@@ -462,11 +513,12 @@ $(document).ready(function () {
 
   // 🔄 Controlar los checkboxes individuales para cada producto
   $(document).on("change", ".toggle-habilitado", function () {
+    debugger;
     let productId = $(this).data("id");
     let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
     $.ajax({
-      url: "src/php/editar_producto.php",
+      url: "src/php/actualizar_estado.php",
       type: "POST",
       data: { id: productId, habilitado: nuevoEstado },
       dataType: "json",

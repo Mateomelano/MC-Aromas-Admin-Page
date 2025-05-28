@@ -9,10 +9,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const ventasPorFecha = {};
       let totalVendido = 0;
       let totalProductosVendidos = 0;
+      let totalGanancia = 0;
+      let entregadas = 0;
+
+      // Fechas base
+      const hoy = new Date();
+      const inicioSemana = new Date(hoy);
+      inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+      const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+      const inicioAnio = new Date(hoy.getFullYear(), 0, 1);
+
+      // Totales por período
+      let totalHoy = 0, totalSemana = 0, totalMes = 0, totalAnio = 0;
 
       data.forEach(venta => {
         const fila = document.createElement("tr");
-
         const productos = JSON.parse(venta.productos).map(p => {
           const key = `${p.nombre}`;
           contadorProductos[key] = (contadorProductos[key] || 0) + p.cantidad;
@@ -20,10 +31,24 @@ document.addEventListener("DOMContentLoaded", () => {
           return `ID ${p.id} - ${p.nombre} x${p.cantidad} - $${(p.precio * p.cantidad).toFixed(2)}`;
         }).join("<br>");
 
-        const fecha = venta.fecha.split(" ")[0];
-        ventasPorFecha[fecha] = (ventasPorFecha[fecha] || 0) + parseFloat(venta.total);
+        const fechaVenta = new Date(venta.fecha);
+        const fechaSimple = venta.fecha.split(" ")[0];
+        ventasPorFecha[fechaSimple] = (ventasPorFecha[fechaSimple] || 0) + parseFloat(venta.total);
 
-        totalVendido += parseFloat(venta.total);
+        const total = parseFloat(venta.total);
+        const mayorista = parseFloat(venta.total_mayorista);
+        const ganancia = total ;
+
+        totalVendido += total;
+        totalGanancia += ganancia;
+
+        // Clasificación por período
+        if (mismaFecha(fechaVenta, hoy)) totalHoy += total;
+        if (fechaVenta >= inicioSemana) totalSemana += total;
+        if (fechaVenta >= inicioMes) totalMes += total;
+        if (fechaVenta >= inicioAnio) totalAnio += total;
+
+        if (venta.entregado == 1) entregadas++;
 
         fila.innerHTML = `
           <td>${venta.fecha}</td>
@@ -37,51 +62,134 @@ document.addEventListener("DOMContentLoaded", () => {
             <button class="btn-eliminar" data-id="${venta.id}" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 5px;">Eliminar</button>
           </td>
         `;
-
         tbody.appendChild(fila);
       });
 
-      // Mostrar KPIs
-      actualizarKPIs(totalVendido, totalProductosVendidos, contadorProductos);
+      // Mostrar KPIs actualizados
+      actualizarKPIsExtendido({
+        totalVendido,
+        totalGanancia,
+        totalProductosVendidos,
+        entregadas,
+        totalHoy,
+        totalSemana,
+        totalMes,
+        totalAnio,
+        contadorProductos
+      });
 
-      // Crear gráficos
       generarGraficoProductos(contadorProductos);
       generarGraficoEvolucion(ventasPorFecha);
-
-      // Agregar eventos a los botones eliminar
       agregarEventosEliminar();
     });
 });
 
+// Comparar fechas sin hora
+function mismaFecha(fecha1, fecha2) {
+  return fecha1.getFullYear() === fecha2.getFullYear() &&
+         fecha1.getMonth() === fecha2.getMonth() &&
+         fecha1.getDate() === fecha2.getDate();
+}
+
+function actualizarKPIsExtendido({
+  totalVendido,
+  totalGanancia,
+  totalProductosVendidos,
+  entregadas,
+  totalHoy,
+  totalSemana,
+  totalMes,
+  totalAnio,
+  contadorProductos
+}) {
+  document.querySelector("#kpi-total-vendido p").textContent = `$${totalVendido.toFixed(2)}`;
+  document.querySelector("#kpi-total-productos p").textContent = totalProductosVendidos;
+
+  let productoTop = "-";
+  let maxCantidad = 0;
+  for (const [producto, cantidad] of Object.entries(contadorProductos)) {
+    if (cantidad > maxCantidad) {
+      productoTop = producto;
+      maxCantidad = cantidad;
+    }
+  }
+  document.querySelector("#kpi-producto-top p").textContent = productoTop;
+
+  // Agrega nuevas KPIs si no existen
+  const kpisExtra = document.querySelector("#kpis-extra");
+  if (!kpisExtra) {
+    const section = document.querySelector(".kpis-ventas");
+    const div = document.createElement("div");
+    div.id = "kpis-extra";
+    div.style.display = "flex";
+    div.style.flexWrap = "wrap";
+    div.style.justifyContent = "center";
+    div.style.gap = "20px";
+    div.style.marginTop = "20px";
+
+    const crearKPI = (titulo, valor) => `
+      <div class="kpi-card" style="flex: 1; background: #eef; padding: 20px; border-radius: 10px; text-align: center;">
+        <h4>${titulo}</h4>
+        <p style="font-size: 18px; font-weight: bold;">${valor}</p>
+      </div>
+    `;
+
+    div.innerHTML = `
+      ${crearKPI("💰 Ganancia total", `$${totalGanancia.toFixed(2)}`)}
+      ${crearKPI("📅 Vendido hoy", `$${totalHoy.toFixed(2)}`)}
+      ${crearKPI("🗓️ Vendido esta semana", `$${totalSemana.toFixed(2)}`)}
+      ${crearKPI("📆 Vendido este mes", `$${totalMes.toFixed(2)}`)}
+      ${crearKPI("🗓️ Vendido este año", `$${totalAnio.toFixed(2)}`)}
+      ${crearKPI("✅ Ventas entregadas", entregadas)}
+    `;
+    section.appendChild(div);
+  }
+}
+
+
 function agregarEventosEliminar() {
-  const botonesEliminar = document.querySelectorAll(".btn-eliminar");
+  // Checkbox entregado
+  document.querySelectorAll(".checkbox-entregado").forEach(checkbox => {
+    checkbox.addEventListener("change", function () {
+      const id = this.getAttribute("data-id");
+      const entregado = this.checked ? 1 : 0;
 
-  botonesEliminar.forEach(boton => {
-    boton.addEventListener("click", () => {
-      const id = boton.getAttribute("data-id");
-
-      if (confirm("¿Seguro que quieres eliminar esta venta? Esta acción no se puede deshacer.")) {
-        fetch("src/php/eliminar_ventas.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: `id=${id}`
-        })
+      fetch("src/php/actualizar_estado_entregado.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id=${id}&entregado=${entregado}`
+      })
         .then(res => res.json())
-        .then(response => {
-          if (response.success) {
-            alert("Venta eliminada correctamente.");
-            location.reload();
+        .then(data => {
+          if (data.success) {
+            console.log("Estado actualizado");
           } else {
-            alert("Error al eliminar la venta.");
-            console.error(response.error);
+            alert("Error al actualizar estado");
           }
         });
+    });
+  });
+
+  // Botón eliminar
+  document.querySelectorAll(".btn-eliminar").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      if (confirm("¿Estás seguro de eliminar esta venta?")) {
+        fetch("src/php/eliminar_ventas.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `id=${id}`
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) location.reload();
+            else alert("Error al eliminar");
+          });
       }
     });
   });
 }
+
 
 // (las funciones de KPIs y Gráficos ya las tienes cargadas aquí también)
 
