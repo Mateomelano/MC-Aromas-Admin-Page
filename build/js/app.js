@@ -1,55 +1,52 @@
 $(document).ready(function () {
-
-   // BOTON MANTENIMIENTO
-const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
+  // BOTON MANTENIMIENTO
+  const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
 
   // 1. Obtener el estado actual del mantenimiento
   fetch("src/php/obtener_estado_mantenimiento.php")
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       if (data && toggleMantenimiento) {
         toggleMantenimiento.checked = data.activado == 1;
       }
     })
-    .catch(err => console.error("Error al obtener estado:", err));
+    .catch((err) => console.error("Error al obtener estado:", err));
 
   // 2. Escuchar cambios y actualizar
   toggleMantenimiento.addEventListener("change", () => {
     fetch("src/php/actualizar_estado_mantenimiento.php", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ activado: toggleMantenimiento.checked ? 1 : 0 })
+      body: JSON.stringify({ activado: toggleMantenimiento.checked ? 1 : 0 }),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success) {
           Swal.fire({
-            icon: 'success',
-            title: 'Modo mantenimiento actualizado',
-            text: 'El estado se cambió correctamente.',
+            icon: "success",
+            title: "Modo mantenimiento actualizado",
+            text: "El estado se cambió correctamente.",
             timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: false,
           });
         } else {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo actualizar el estado.',
+            icon: "error",
+            title: "Error",
+            text: "No se pudo actualizar el estado.",
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al conectar con el servidor.',
+          icon: "error",
+          title: "Error",
+          text: "Hubo un problema al conectar con el servidor.",
         });
       });
   });
-
-
 
   // Mostrar el modal al hacer clic en "Agregar Producto"
   $("#add-product-btn").click(function () {
@@ -139,10 +136,10 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
       formData.append("marca", marcaSeleccionada);
     } else {
       Swal.fire({
-        icon: 'warning',
-        title: '¡Atención!',
-        text: 'Por favor, selecciona o ingresa una marca.'
-      })
+        icon: "warning",
+        title: "¡Atención!",
+        text: "Por favor, selecciona o ingresa una marca.",
+      });
       return;
     }
 
@@ -156,10 +153,10 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
       formData.append("categoria", categoriaSeleccionada);
     } else {
       Swal.fire({
-        icon: 'warning',
-        title: '¡Atención!',
-        text: 'Por favor, selecciona o ingresa una categoria.'
-      })
+        icon: "warning",
+        title: "¡Atención!",
+        text: "Por favor, selecciona o ingresa una categoria.",
+      });
       return;
     }
 
@@ -180,11 +177,11 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
     })
       .done(function (data) {
         Swal.fire({
-          icon: 'success',
-          title: 'Producto Agregado correctamente',
+          icon: "success",
+          title: "Producto Agregado correctamente",
           showConfirmButton: false,
           timer: 1200,
-          timerProgressBar: true
+          timerProgressBar: true,
         }).then(() => {
           location.reload();
         });
@@ -283,10 +280,10 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
       formData.set("marca", marcaSeleccionada);
     } else {
       Swal.fire({
-        icon: 'warning',
-        title: '¡Atención!',
-        text: 'Por favor, selecciona o ingresa una marca.'
-      })
+        icon: "warning",
+        title: "¡Atención!",
+        text: "Por favor, selecciona o ingresa una marca.",
+      });
       return;
     }
 
@@ -300,25 +297,25 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
       formData.set("categoria", categoriaSeleccionada);
     } else {
       Swal.fire({
-        icon: 'warning',
-        title: '¡Atención!',
-        text: 'Por favor, selecciona o ingresa una categoria.'
-      })
+        icon: "warning",
+        title: "¡Atención!",
+        text: "Por favor, selecciona o ingresa una categoria.",
+      });
       return;
     }
 
     // --- Imagen
-      // --- Imagen
-      let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
-      let imagen = document.getElementById("imagenEditar").files[0];
-    
-      if (imagen) {
-        // Si se sube una nueva imagen, la agregamos al FormData
-        formData.append("imagen", imagen);
-      } else {
-        // Mantener la imagen anterior
-        formData.append("imagenUrlActual", imagenActual);
-      }
+    // --- Imagen
+    let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
+    let imagen = document.getElementById("imagenEditar").files[0];
+
+    if (imagen) {
+      // Si se sube una nueva imagen, la agregamos al FormData
+      formData.append("imagen", imagen);
+    } else {
+      // Mantener la imagen anterior
+      formData.append("imagenUrlActual", imagenActual);
+    }
 
     // --- Enviar solicitud AJAX
     $.ajax({
@@ -330,11 +327,11 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
     })
       .done(function (data) {
         Swal.fire({
-          icon: 'success',
-          title: 'Producto editado correctamente',
+          icon: "success",
+          title: "Producto editado correctamente",
           showConfirmButton: false,
           timer: 1200,
-          timerProgressBar: true
+          timerProgressBar: true,
         }).then(() => {
           location.reload();
         });
@@ -424,36 +421,35 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
           data.forEach(function (producto) {
             let checked = producto.habilitado == 1 ? "checked" : "";
             let row = `<tr>
-                              <td>${producto.id}</td>
-                              <td>${producto.nombre}</td>
-                              <td>${producto.descripcion}</td>
-                              <td>${producto.categoria}</td>
-                              <td>${producto.marca}</td>
-                              <td>$${parseFloat(producto.precio).toFixed(
-                                2
-                              )}</td>
-                              <td>$${parseFloat(
-                                producto.preciomayorista
-                              ).toFixed(2)}</td>
-                              <td>
-                                  <input type="checkbox" class="toggle-habilitado" data-id="${
-                                    producto.id
-                                  }" ${checked}>
-                              </td>
-                              <td>
-                                  <img src="${
-                                    producto.imagen
-                                  }" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
-                              </td>
-                              <td>
-                                  <button class='edit-btn' data-id='${
-                                    producto.id
-                                  }'>✏️</button>
-                                  <button class='delete-btn' data-id='${
-                                    producto.id
-                                  }'>🗑️</button>
-                              </td>
-                          </tr>`;
+    <td>${producto.id}</td>
+    <td>${producto.nombre}</td>
+    <td>${producto.descripcion}</td>
+    <td>${producto.categoria}</td>
+    <td>${producto.marca}</td>
+    <td>$${parseFloat(producto.precio).toFixed(2)}</td>
+    <td>$${parseFloat(producto.preciomayorista).toFixed(2)}</td>
+    <td>
+        <input type="checkbox" class="toggle-habilitado" data-id="${
+          producto.id
+        }" ${checked}>
+    </td>
+    <td>
+        <img src="${
+          producto.imagen
+        }" alt="Imagen del producto" width="50" height="50" onerror="this.onerror=null;this.src='default.jpg';">
+    </td>
+    <td>
+        <button class='edit-btn' data-id='${producto.id}'>✏️</button>
+        <button class='delete-btn' data-id='${producto.id}'>🗑️</button>
+    </td>
+    <td>
+        <input type="checkbox" class="checkProducto" value="${
+          producto.id
+        }" name="producto_${producto.id}">
+        <button class="edit-precio-btn" data-id="${producto.id}">✏️</button>
+    </td>
+</tr>`;
+
             tableBody.append(row);
           });
         } else {
@@ -595,4 +591,96 @@ const toggleMantenimiento = document.getElementById("mantenimiento-toggle");
     // Descargar el archivo
     XLSX.writeFile(wb, "productos.xlsx");
   }
+
+  //FUNCION EDITAR PRECIOS VARIOS
+
+  //Submit a PHP
+  $("#formEditarPrecios").on("submit", function (e) {
+    e.preventDefault(); // prevenir el envío normal
+
+    const ids = $("#idsSeleccionados").val().split(",");
+    const nuevoPrecio = $("input[name='precionuevo']").val();
+    const nuevoPrecioMayorista = $("input[name='preciomayoristanuevo']").val();
+
+    if (
+      !nuevoPrecio ||
+      !nuevoPrecioMayorista ||
+      isNaN(nuevoPrecio) ||
+      isNaN(nuevoPrecioMayorista)
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "Precios inválidos",
+        text: "Ingresá precios válidos para ambos campos.",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Entendido",
+      });
+      return;
+    }
+
+    $.ajax({
+      url: "src/php/editar_precios.php",
+      method: "POST",
+      data: {
+        ids: ids,
+        nuevoPrecio: nuevoPrecio,
+        nuevoPrecioMayorista: nuevoPrecioMayorista,
+      },
+      success: function (respuesta) {
+        Swal.fire({
+          icon: "success",
+          title: "¡Actualizado!",
+          text: "Los precios fueron actualizados correctamente.",
+          timer: 1000, // 1 segundo
+          showConfirmButton: false,
+        }).then(() => {
+          cerrarModal("modalEditarPrecios");
+          cargarProductos(); // recargar la tabla
+        });
+      },
+      error: function () {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un problema al actualizar los precios.",
+          confirmButtonColor: "#d33",
+          confirmButtonText: "Cerrar",
+        });
+      },
+    });
+  });
+
+  //MODAL
+  function abrirModal(id) {
+    $("#" + id).show();
+  }
+  function cerrarModal(id) {
+    $("#" + id).hide();
+  }
+
+  $(document).on("click", ".edit-precio-btn", function () {
+    // Obtener todos los checkboxes seleccionados
+    const seleccionados = $(".checkProducto:checked")
+      .map(function () {
+        return $(this).val(); // devuelve el ID del producto
+      })
+      .get(); // convierte en array
+
+    if (seleccionados.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Sin productos seleccionados",
+        text: "Por favor, seleccioná al menos un producto.",
+        confirmButtonColor: "#f39c12",
+        confirmButtonText: "Entendido",
+      });
+      return;
+    }
+
+    // Guardás los IDs en un input oculto o variable global
+    $("#idsSeleccionados").val(seleccionados.join(",")); // si usás un input hidden
+
+    // Abrís tu modal de edición de precio
+    abrirModal("modalEditarPrecios");
+  });
 });

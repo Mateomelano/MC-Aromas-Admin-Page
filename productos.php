@@ -97,6 +97,10 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
                         </th>
                         <th>Imagen</th>
                         <th>Acciones</th>
+                        <th>Editar $</th> <!-- para seleccionar todos -->
+                        <input type="hidden" id="idsSeleccionados" name="idsSeleccionados">
+
+
                     </tr>
                 </thead>
                 <tbody id="product-table-body">
@@ -220,6 +224,21 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
             <button onclick="cerrarModal('modalEliminar')">Cancelar</button>
         </div>
     </div>
+<!-- Modal Editar Precios -->
+    <div id="modalEditarPrecios" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" onclick="cerrarModal('modalEditarPrecios')">&times;</span>
+    <form id="formEditarPrecios">
+      <h3>Editar Precios de Productos Seleccionados</h3>
+      <label>Nuevo Precio:</label>
+      <input type="number" step="0.01" name="precionuevo" required>
+      <label>Nuevo Precio Mayorista:</label>
+      <input type="number" step="0.01" name="preciomayoristanuevo" required>
+      <input type="hidden" name="ids" id="idsSeleccionados">
+      <button type="submit" id="formEditarPrecios">Actualizar</button>
+    </form>
+  </div>
+</div>
 
 
 
