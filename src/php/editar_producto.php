@@ -21,7 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $directorioDestino = "../../uploads/" . $nombreArchivo;
 
         if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $directorioDestino)) {
-            $imagenUrl = "uploads/" . $nombreArchivo; // Ruta para guardar en la base de datos
+            $imagenUrl = "https://purple-sheep-451734.hostingersite.com/uploads/" . $nombreArchivo;
+
         } else {
             echo json_encode(["success" => false, "error" => "Error al subir la imagen."]);
             exit;
@@ -38,12 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $marca = isset($_POST['marca']) ? $conn->real_escape_string($_POST['marca']) : null;
     $precio = isset($_POST['precio']) ? floatval($_POST['precio']) : null;
     $preciomayorista = isset($_POST['preciomayorista']) ? floatval($_POST['preciomayorista']) : null;
+    $stock = isset($_POST['stock']) ? intval($_POST['stock']) : 0; // Nuevo campo
 
     $stmt = $conn->prepare("UPDATE productos 
-        SET nombre = ?, descripcion = ?, categoria = ?, marca = ?, precio = ?, preciomayorista = ?, habilitado = ?, imagen = ?
+        SET nombre = ?, descripcion = ?, categoria = ?, marca = ?, precio = ?, preciomayorista = ?, habilitado = ?, imagen = ?, stock = ?
         WHERE id = ?");
 
-    $stmt->bind_param("ssssddisi", $nombre, $descripcion, $categoria, $marca, $precio, $preciomayorista, $habilitado, $imagenUrl, $id);
+    $stmt->bind_param("ssssddisii", $nombre, $descripcion, $categoria, $marca, $precio, $preciomayorista, $habilitado, $imagenUrl, $stock, $id);
 
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Producto actualizado correctamente."]);
@@ -57,3 +59,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
+?>

@@ -4,9 +4,9 @@ include 'db.php';
 $q = isset($_GET['q']) ? $conn->real_escape_string($_GET['q']) : '';
 $habilitadoFiltro = isset($_GET['habilitado']) && $_GET['habilitado'] !== '' ? (int) $_GET['habilitado'] : null;
 $orden = isset($_GET['orden']) ? $_GET['orden'] : null;
-$columna = isset($_GET['columna']) && in_array($_GET['columna'], ['precio', 'preciomayorista']) ? $_GET['columna'] : null; // Verifica que la columna sea válida
+$columna = isset($_GET['columna']) && in_array($_GET['columna'], ['precio', 'preciomayorista', 'stock']) ? $_GET['columna'] : null; // Ahora también permite ordenar por stock
 
-$sql = "SELECT id, nombre, categoria, marca, precio, preciomayorista, habilitado, descripcion, imagen FROM productos";
+$sql = "SELECT id, nombre, categoria, marca, precio, preciomayorista, habilitado, descripcion, imagen, stock FROM productos";
 $filtros = [];
 
 // 🟢 Filtro de búsqueda
@@ -18,7 +18,8 @@ if (!empty($q)) {
                    marca LIKE '%$q%' OR 
                    imagen LIKE '%$q%' OR
                    preciomayorista LIKE '%$q%' OR 
-                   precio LIKE '%$q%')";
+                   precio LIKE '%$q%' OR
+                   stock LIKE '%$q%')"; // Ahora busca también en stock
 }
 
 // 🟢 Filtro de habilitado
@@ -49,4 +50,3 @@ if ($result && $result->num_rows > 0) {
 
 echo json_encode($productos);
 ?>
-

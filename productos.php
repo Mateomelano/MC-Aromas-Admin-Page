@@ -39,6 +39,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
             <ul>
                 <li><a href="index.php">Información</a></li>
                 <li><a href="productos.php">Productos</a></li>
+                <li><a href="stock.php">Stock</a></li>
                 <li><a href="banners.php">Banners</a></li>
                 <li><a href="pedidos.php">Pedidos</a></li>
                 <li><a href="ventas.php">Ventas</a></li>
@@ -87,6 +88,9 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
                         </th>
                         <th>Precio Mayorista
                             <span id="ordenar-preciomayorista" class="orden-icon" data-order="null">🔼🔽</span>
+                        </th>
+                        <th>Stock
+                            <span id="ordenar-stock" class="orden-icon" data-order="null">🔼🔽</span>
                         </th>
                         <th>Habilitado
                             <label class="checkbox-container">
@@ -142,6 +146,10 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
                 <label>Precio Mayorista:</label>
                 <input type="number" id="precioMayoristaAgregar" step="0.01" name="precioMayorista" required>
 
+                <label>Stock:</label>
+                <input type="number" id="stockAgregar" step="1" name="stock" required>
+
+
                 <label>Imagen:</label>
                 <input type="file" id="imagenAgregar" name="imagen" accept="image/*">
 
@@ -191,6 +199,9 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
                 <label>Precio Mayorista:</label>
                 <input type="number" id="preciomayoristaEditar" name="precioMayorista" step="0.01" required>
 
+                <label>Stock:</label>
+                <input type="number" id="stockEditar" step="1" name="stock" required>
+
                 <label>Imagen Actual:</label>
                 <div>
                     <img id="imagenActual" src="" alt="Imagen Actual" style="width: 150px;">
@@ -224,21 +235,31 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
             <button onclick="cerrarModal('modalEliminar')">Cancelar</button>
         </div>
     </div>
-<!-- Modal Editar Precios -->
+    <!-- Modal Editar Productos Seleccionados -->
     <div id="modalEditarPrecios" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span class="close" onclick="cerrarModal('modalEditarPrecios')">&times;</span>
-    <form id="formEditarPrecios">
-      <h3>Editar Precios de Productos Seleccionados</h3>
-      <label>Nuevo Precio:</label>
-      <input type="number" step="0.01" name="precionuevo" required>
-      <label>Nuevo Precio Mayorista:</label>
-      <input type="number" step="0.01" name="preciomayoristanuevo" required>
-      <input type="hidden" name="ids" id="idsSeleccionados">
-      <button type="submit" id="formEditarPrecios">Actualizar</button>
-    </form>
-  </div>
-</div>
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('modalEditarPrecios')">&times;</span>
+            <form id="formEditarPrecios">
+                <h3>Editar Productos Seleccionados</h3>
+
+                <label><input type="checkbox" id="check-precio"> Editar Precio</label>
+                <input type="number" step="0.01" name="precionuevo" id="input-precio" disabled>
+
+                <label><input type="checkbox" id="check-mayorista"> Editar Precio Mayorista</label>
+                <input type="number" step="0.01" name="preciomayoristanuevo" id="input-mayorista" disabled>
+
+                <label><input type="checkbox" id="check-categoria"> Editar Categoría</label>
+                <input type="text" name="categoriaNueva" id="input-categoria" disabled>
+
+                <label><input type="checkbox" id="check-stock"> Editar Stock</label>
+                <input type="number" step="1" name="stockNuevo" id="input-stock" disabled>
+
+                <input type="hidden" name="ids" id="idsSeleccionados">
+                <button type="submit" id="btnEditarPrecios">Actualizar</button>
+            </form>
+        </div>
+    </div>
+
 
 
 

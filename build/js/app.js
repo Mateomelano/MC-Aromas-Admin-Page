@@ -55,6 +55,12 @@ $(document).ready(function () {
 
   // Función para abrir el modal
   function abrirModal(id) {
+    // Limpiar valores anteriores
+    $("#formEditarPrecios")[0].reset();
+    ["precio", "mayorista", "categoria", "stock"].forEach((campo) => {
+      $(`#input-${campo}`).prop("disabled", true);
+      $(`#check-${campo}`).prop("checked", false);
+    });
     $("#" + id).css("display", "flex");
   }
 
@@ -119,6 +125,7 @@ $(document).ready(function () {
   const cloudinaryPreset = "McaromasPics"; // Reemplaza con tu preset de Cloudinary
 
   $("#formAgregar").submit(async function (e) {
+    debugger;
     e.preventDefault();
     let form = document.getElementById("formAgregar");
     let formData = new FormData(form);
@@ -236,13 +243,16 @@ $(document).ready(function () {
     let preciomayorista = row.find("td:eq(6)").text().replace("$", "").trim();
     $("#preciomayoristaEditar").val(preciomayorista);
 
-    let habilitado = row.find("td:eq(7) input[type='checkbox']").is(":checked")
+    let stock = row.find("td:eq(7)").text().trim();
+    $("#stockEditar").val(stock);
+
+    let habilitado = row.find("td:eq(8) input[type='checkbox']").is(":checked")
       ? "1"
       : "0";
     $("#habilitadoEditar").val(habilitado);
 
     // 📌 NUEVO: Obtener la URL de la imagen actual desde un atributo data o columna oculta
-    let imagenUrl = row.find("td:eq(8) img").attr("src"); // CORRECTO
+    let imagenUrl = row.find("td:eq(9) img").attr("src"); // CORRECTO
 
     // Mostrar la imagen actual en el modal si existe
     if (imagenUrl) {
@@ -257,18 +267,17 @@ $(document).ready(function () {
   });
 
   // Editar producto
-  // Editar producto
   $("#formEditar").submit(async function (e) {
-    debugger;
     e.preventDefault();
     let formData = new FormData();
-
     formData.append("id", $("#idEditar").val());
     formData.append("nombre", $("#nombreEditar").val());
     formData.append("descripcion", $("#descripcionEditar").val());
     formData.append("precio", $("#precioEditar").val());
     formData.append("preciomayorista", $("#preciomayoristaEditar").val());
+    formData.append("stock", $("#stockEditar").val());
     formData.append("habilitado", $("#habilitadoEditar").val());
+    console.log("stock editado", formData.get("stock"));
 
     // --- Marca (nueva o seleccionada)
     let marcaSeleccionada = $("#marcaEditar").val();
@@ -304,7 +313,6 @@ $(document).ready(function () {
       return;
     }
 
-    // --- Imagen
     // --- Imagen
     let imagenActual = $("#imagenUrlActual").val(); // La que ya tenía
     let imagen = document.getElementById("imagenEditar").files[0];
@@ -370,7 +378,12 @@ $(document).ready(function () {
 
   $(".orden-icon").click(function () {
     let columna =
-      $(this).attr("id") === "ordenar-precio" ? "precio" : "preciomayorista"; // Identifica qué columna ordenar
+      $(this).attr("id") === "ordenar-precio"
+        ? "precio"
+        : $(this).attr("id") === "ordenar-mayorista"
+        ? "preciomayorista"
+        : "stock";
+    // Identifica qué columna ordenar
     let ordenActual = $(this).data("order");
 
     if (!ordenActual || ordenActual === "null") {
@@ -428,6 +441,7 @@ $(document).ready(function () {
     <td>${producto.marca}</td>
     <td>$${parseFloat(producto.precio).toFixed(2)}</td>
     <td>$${parseFloat(producto.preciomayorista).toFixed(2)}</td>
+    <td>${producto.stock}</td>
     <td>
         <input type="checkbox" class="toggle-habilitado" data-id="${
           producto.id
@@ -509,7 +523,6 @@ $(document).ready(function () {
 
   // 🔄 Controlar los checkboxes individuales para cada producto
   $(document).on("change", ".toggle-habilitado", function () {
-    debugger;
     let productId = $(this).data("id");
     let nuevoEstado = $(this).is(":checked") ? 1 : 0;
 
@@ -554,6 +567,7 @@ $(document).ready(function () {
       "Marca",
       "Precio",
       "Precio Mayorista",
+      "Stock",
       "Habilitado",
     ];
     data.push(headers);
@@ -576,7 +590,8 @@ $(document).ready(function () {
           cells.eq(3).text().trim(), // Categoría
           cells.eq(4).text().trim(), // Marca
           cells.eq(5).text().trim(), // Precio
-          cells.eq(6).text().trim(), // Precio
+          cells.eq(6).text().trim(), // Precio Mayorista
+          cells.eq(7).text().trim(), // Stock
           habilitadoIcon, // Habilitado con ícono de texto
         ];
         data.push(rowData);
@@ -596,60 +611,77 @@ $(document).ready(function () {
 
   //Submit a PHP
   $("#formEditarPrecios").on("submit", function (e) {
-    e.preventDefault(); // prevenir el envío normal
+    e.preventDefault();
 
     const ids = $("#idsSeleccionados").val().split(",");
-    const nuevoPrecio = $("input[name='precionuevo']").val();
-    const nuevoPrecioMayorista = $("input[name='preciomayoristanuevo']").val();
+    const data = { ids };
 
-    if (
-      !nuevoPrecio ||
-      !nuevoPrecioMayorista ||
-      isNaN(nuevoPrecio) ||
-      isNaN(nuevoPrecioMayorista)
-    ) {
-      Swal.fire({
-        icon: "warning",
-        title: "Precios inválidos",
-        text: "Ingresá precios válidos para ambos campos.",
-        confirmButtonColor: "#d33",
-        confirmButtonText: "Entendido",
-      });
-      return;
+    if ($("#check-precio").is(":checked")) {
+      const val = $("#input-precio").val();
+      if (!val || isNaN(val)) return mostrarError("Precio inválido");
+      data.nuevoPrecio = val;
+    }
+
+    if ($("#check-mayorista").is(":checked")) {
+      const val = $("#input-mayorista").val();
+      if (!val || isNaN(val)) return mostrarError("Precio mayorista inválido");
+      data.nuevoPrecioMayorista = val;
+    }
+
+    if ($("#check-categoria").is(":checked")) {
+      const val = $("#input-categoria").val().trim();
+      if (!val) return mostrarError("Categoría vacía");
+      data.nuevaCategoria = val;
+    }
+
+    if ($("#check-stock").is(":checked")) {
+      const val = $("#input-stock").val();
+      if (val === "" || isNaN(val) || parseInt(val) < 0)
+        return mostrarError("Stock inválido");
+      data.nuevoStock = parseInt(val);
+    }
+
+    if (Object.keys(data).length === 1) {
+      return mostrarError("No seleccionaste ningún campo para editar.");
     }
 
     $.ajax({
       url: "src/php/editar_precios.php",
       method: "POST",
-      data: {
-        ids: ids,
-        nuevoPrecio: nuevoPrecio,
-        nuevoPrecioMayorista: nuevoPrecioMayorista,
-      },
-      success: function (respuesta) {
+      data: data,
+      success: function () {
         Swal.fire({
           icon: "success",
           title: "¡Actualizado!",
-          text: "Los precios fueron actualizados correctamente.",
-          timer: 1000, // 1 segundo
+          text: "Los productos fueron modificados.",
+          timer: 1000,
           showConfirmButton: false,
         }).then(() => {
           cerrarModal("modalEditarPrecios");
-          cargarProductos(); // recargar la tabla
+          cargarProductos();
         });
       },
       error: function () {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Ocurrió un problema al actualizar los precios.",
-          confirmButtonColor: "#d33",
-          confirmButtonText: "Cerrar",
-        });
+        mostrarError("Ocurrió un error al actualizar los productos.");
       },
     });
   });
 
+  function mostrarError(msg) {
+    Swal.fire({
+      icon: "warning",
+      title: "Error",
+      text: msg,
+      confirmButtonColor: "#d33",
+    });
+  }
+
+  // Habilitar/Deshabilitar campos en el modal según checkboxes
+  ["precio", "mayorista", "categoria", "stock"].forEach((campo) => {
+    $(`#check-${campo}`).on("change", function () {
+      $(`#input-${campo}`).prop("disabled", !this.checked);
+    });
+  });
   //MODAL
   function abrirModal(id) {
     $("#" + id).show();

@@ -35,6 +35,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
         <ul>
           <li><a href="index.php">Información</a></li>
           <li><a href="productos.php">Productos</a></li>
+          <li><a href="stock.php">Stock</a></li>
           <li><a href="banners.php">Banners</a></li>
           <li><a href="pedidos.php">Pedidos</a></li>
           <li><a href="ventas.php">Ventas</a></li>
